@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.MyApp.MySplash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">#EECEF6</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/menthealth_ai_cc_1__1</item>
+        <item name="postSplashScreenTheme">@style/Theme.CalmSpace</item>
+    </style>
+    
+</resources>
