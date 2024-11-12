@@ -1,3 +1,5 @@
+// File: app/src/main/java/com/chrisp/calmspace/feature/artikel/ArticleScreen.kt
+
 package com.chrisp.calmspace.feature.artikel
 
 import androidx.compose.foundation.Image
@@ -16,7 +18,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -25,6 +26,7 @@ import com.chrisp.calmspace.model.ArticleModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ArticleScreen(
+    onArticleClick: (ArticleModel) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ArticleViewModel = viewModel()
 ) {
@@ -48,9 +50,8 @@ fun ArticleScreen(
                 .fillMaxWidth()
                 .padding(16.dp),
             placeholder = { Text("Cari artikel atau video...") },
-            leadingIcon = {
-            }
-        ) {}
+            leadingIcon = { }
+        ) { }
 
         TabRow(
             selectedTabIndex = selectedTab,
@@ -91,7 +92,10 @@ fun ArticleScreen(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 items(articles) { article ->
-                    ArticleCard(article)
+                    ArticleCard(
+                        article = article,
+                        onArticleClick = onArticleClick
+                    )
                 }
             }
         }
@@ -102,10 +106,11 @@ fun ArticleScreen(
 @Composable
 fun ArticleCard(
     article: ArticleModel,
+    onArticleClick: (ArticleModel) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Card(
-        onClick = { /* Navigate to article detail */ },
+        onClick = { onArticleClick(article) },
         modifier = modifier
             .fillMaxWidth()
             .height(100.dp),
@@ -157,10 +162,4 @@ fun ArticleCard(
             }
         }
     }
-}
-
-@Preview
-@Composable
-private fun ArticleScreenPreview() {
-    ArticleScreen()
 }

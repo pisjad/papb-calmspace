@@ -1,5 +1,6 @@
-package com.chrisp.calmspace.model
+// File: app/src/main/java/com/chrisp/calmspace/model/ArticleModel.kt
 
+package com.chrisp.calmspace.model
 
 data class ArticleModel(
     val id: Int,
