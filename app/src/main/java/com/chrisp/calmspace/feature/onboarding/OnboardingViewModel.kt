@@ -11,9 +11,21 @@ class OnboardingViewModel : ViewModel() {
     val currentIndex: State<Int> = _currentIndex
 
     private val _onboardingItems = listOf(
-        OnboardingModel(R.drawable.mental_health_v1, "Selamat Datang di CalmSpace", "Temukan langkah-langkah praktis dan dukungan yang Anda butuhkan untuk menjaga kesehatan mental setiap hari. Mulai perjalanan Anda menuju kehidupan yang lebih seimbang, tenang, dan bahagia."),
-        OnboardingModel(R.drawable.mental_health_v2, "Konsultasi Mudah dan Cepat ", "Dapatkan dukungan dan solusi dari para ahli melalui konsultasi mudah, kapan saja dan di mana saja. Bersama kami, setiap langkah menuju kesehatan mental yang lebih baik jadi lebih ringan"),
-        OnboardingModel(R.drawable.mental_health_v3, "Berbagi Cerita, Saling Mendukung", "Temukan kekuatan dalam komunitas melalui forum diskusi. Di sini, Anda tidak pernah sendiri—bersama kita bisa tumbuh dan sembuh")
+        OnboardingModel(
+            R.drawable.mental_health_v1,
+            "Selamat Datang di CalmSpace",
+            "Temukan langkah-langkah praktis dan dukungan yang Anda butuhkan untuk menjaga kesehatan mental setiap hari. Mulai perjalanan Anda menuju kehidupan yang lebih seimbang, tenang, dan bahagia."
+        ),
+        OnboardingModel(
+            R.drawable.mental_health_v2,
+            "Konsultasi Mudah dan Cepat ",
+            "Dapatkan dukungan dan solusi dari para ahli melalui konsultasi mudah, kapan saja dan di mana saja. Bersama kami, setiap langkah menuju kesehatan mental yang lebih baik jadi lebih ringan"
+        ),
+        OnboardingModel(
+            R.drawable.mental_health_v3,
+            "Berbagi Cerita, Saling Mendukung",
+            "Temukan kekuatan dalam komunitas melalui forum diskusi. Di sini, Anda tidak pernah sendiri—bersama kita bisa tumbuh dan sembuh"
+        )
     )
     val onboardingItems: List<OnboardingModel> = _onboardingItems
 

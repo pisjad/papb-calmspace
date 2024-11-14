@@ -15,7 +15,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -24,7 +23,10 @@ import com.chrisp.calmspace.ui.theme.Purple60
 import com.chrisp.calmspace.ui.theme.White20
 
 @Composable
-fun OnboardingScreen(viewModel: OnboardingViewModel = viewModel()) {
+fun OnboardingScreen(
+    onFinish: () -> Unit,
+    viewModel: OnboardingViewModel = viewModel()
+) {
     val currentIndex by viewModel.currentIndex
     val onboardingItem = viewModel.onboardingItems[currentIndex]
 
@@ -33,11 +35,11 @@ fun OnboardingScreen(viewModel: OnboardingViewModel = viewModel()) {
         .background(Purple100)
     ) {
         Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(23.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(23.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
             Image(
                 painter = painterResource(id = onboardingItem.image),
@@ -63,11 +65,15 @@ fun OnboardingScreen(viewModel: OnboardingViewModel = viewModel()) {
                 textAlign = TextAlign.Center
             )
             Spacer(modifier = Modifier.height(32.dp))
-            Column(modifier = Modifier
-                .fillMaxWidth()
-            ) {
+            Column(modifier = Modifier.fillMaxWidth()) {
                 Button(
-                    onClick = { viewModel.nextScreen() },
+                    onClick = {
+                        if (currentIndex == viewModel.onboardingItems.size - 1) {
+                            onFinish()
+                        } else {
+                            viewModel.nextScreen()
+                        }
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .size(200.dp, 50.dp),
@@ -95,16 +101,10 @@ fun OnboardingScreen(viewModel: OnboardingViewModel = viewModel()) {
                             contentColor = White20
                         )
                     ) {
-                        Text("Kembali", fontSize = 16.sp,)
+                        Text("Kembali", fontSize = 16.sp)
                     }
                 }
             }
         }
     }
-}
-
-@Preview
-@Composable
-private fun Preview() {
-    OnboardingScreen()
 }
