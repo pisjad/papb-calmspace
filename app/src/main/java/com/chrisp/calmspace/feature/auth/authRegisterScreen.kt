@@ -25,7 +25,7 @@ import com.chrisp.calmspace.ui.theme.Purple100
 
 
 @Composable
-fun RegistrationScreen() {
+fun RegistrationScreen( onRegisterComplete: () -> Unit) {
     var fullName by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var phoneNumber by remember { mutableStateOf("") }
@@ -208,10 +208,4 @@ fun RegistrationScreen() {
             }
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun RegistrationScreenPreview() {
-    RegistrationScreen()
 }
