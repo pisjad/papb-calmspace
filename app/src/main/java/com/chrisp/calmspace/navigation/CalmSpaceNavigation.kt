@@ -63,6 +63,18 @@ fun CalmSpaceNavigation(
                 }
             ) */
         }
+        composable(BottomNavItem.Forum.route) {
+            // TODO: Implement ForumScreen
+            /* ForumScreen(
+                currentRoute = currentRoute,
+                onNavigate = { route ->
+                    navController.navigate(route) {
+                        popUpTo(navController.graph.startDestinationId)
+                        launchSingleTop = true
+                    }
+                }
+            ) */
+        }
 
         composable(BottomNavItem.Profile.route) {
             // TODO: Implement ProfileScreen

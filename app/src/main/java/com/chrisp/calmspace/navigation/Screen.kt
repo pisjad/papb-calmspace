@@ -7,5 +7,6 @@ sealed class Screen {
     object AuthRegister : Screen()
     object Home : Screen()
     object ArticleList : Screen()
+
     data class ArticleDetail(val article: ArticleModel) : Screen()
 }

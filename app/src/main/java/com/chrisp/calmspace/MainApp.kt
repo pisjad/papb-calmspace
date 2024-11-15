@@ -54,6 +54,11 @@ sealed class BottomNavItem(
         title = "Konsultasi",
         icon = R.drawable.ic_konsultasi
     )
+    object Forum : BottomNavItem(
+        route = "forum",
+        title = "Forum",
+        icon = R.drawable.ic_forum
+    )
     object Profile : BottomNavItem(
         route = "profile",
         title = "Profil",
@@ -166,6 +171,7 @@ private fun BottomNavigationBar(
         BottomNavItem.Home,
         BottomNavItem.Article,
         BottomNavItem.Konsultasi,
+        BottomNavItem.Forum,
         BottomNavItem.Profile
     )
 

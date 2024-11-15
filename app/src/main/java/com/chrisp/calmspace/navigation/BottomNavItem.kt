@@ -11,21 +11,26 @@ sealed class BottomNavItem(
     object Home : BottomNavItem(
         route = "home",
         title = "Beranda",
-        icon = R.drawable.ic_home // Make sure this exists in drawable
+        icon = R.drawable.ic_home
     )
     object Article : BottomNavItem(
         route = "article",
         title = "Artikel",
-        icon = R.drawable.ic_article // Make sure this exists in drawable
+        icon = R.drawable.ic_article
+    )
+    object Forum : BottomNavItem(
+        route = "forum",
+        title = "Forum",
+        icon = R.drawable.ic_forum
     )
     object Konsultasi : BottomNavItem(
         route = "konsultasi",
         title = "Konsultasi",
-        icon = R.drawable.ic_konsultasi // Make sure this exists in drawable
+        icon = R.drawable.ic_konsultasi
     )
     object Profile : BottomNavItem(
         route = "profile",
         title = "Profil",
-        icon = R.drawable.ic_profile // Make sure this exists in drawable
+        icon = R.drawable.ic_profile
     )
 }
