@@ -1,12 +1,10 @@
 package com.chrisp.calmspace.navigation
-
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-
 @Composable
 fun BottomNavigation(
     currentRoute: String?,
@@ -18,7 +16,6 @@ fun BottomNavigation(
         BottomNavItem.Konsultasi,
         BottomNavItem.Profile
     )
-
     NavigationBar(
         containerColor = Color.White,
         tonalElevation = 8.dp
@@ -33,7 +30,6 @@ fun BottomNavigation(
         }
     }
 }
-
 @Composable
 fun RowScope.BottomNavigationItem(
     selected: Boolean,

@@ -1,12 +1,10 @@
 package com.chrisp.calmspace.navigation
-
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-
 @Composable
 fun CalmSpaceNavigation(
     navController: NavHostController = rememberNavController()
@@ -15,7 +13,6 @@ fun CalmSpaceNavigation(
         .currentBackStackEntryFlow
         .collectAsState(initial = null)
         .value?.destination?.route
-
     NavHost(
         navController = navController,
         startDestination = BottomNavItem.Home.route
@@ -32,7 +29,6 @@ fun CalmSpaceNavigation(
                 }
             ) */
         }
-
         composable(BottomNavItem.Article.route) {
             // TODO: Implement ArticleScreen
             /* ArticleScreen(
@@ -50,7 +46,6 @@ fun CalmSpaceNavigation(
                 }
             ) */
         }
-
         composable(BottomNavItem.Konsultasi.route) {
             // TODO: Implement KonsultasiScreen
             /* KonsultasiScreen(
@@ -63,19 +58,6 @@ fun CalmSpaceNavigation(
                 }
             ) */
         }
-        composable(BottomNavItem.Forum.route) {
-            // TODO: Implement ForumScreen
-            /* ForumScreen(
-                currentRoute = currentRoute,
-                onNavigate = { route ->
-                    navController.navigate(route) {
-                        popUpTo(navController.graph.startDestinationId)
-                        launchSingleTop = true
-                    }
-                }
-            ) */
-        }
-
         composable(BottomNavItem.Profile.route) {
             // TODO: Implement ProfileScreen
             /* ProfileScreen(
@@ -88,7 +70,6 @@ fun CalmSpaceNavigation(
                 }
             ) */
         }
-
         // TODO: Add article detail navigation
         // articleGraph(navController)
     }

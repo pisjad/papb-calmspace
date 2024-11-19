@@ -1,6 +1,7 @@
 package com.chrisp.calmspace.feature.home
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.material.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -25,7 +26,16 @@ import com.chrisp.calmspace.feature.auth.LoginScreen
 import com.chrisp.calmspace.ui.theme.Purple80
 
 @Composable
-fun DashboardScreen(username: String, navController: NavController) {
+fun DashboardScreen(
+    username: String,
+    navController: NavController,
+    onNavigateToArticle: () -> Unit = {
+        navController.navigate("article") {
+            popUpTo(navController.graph.startDestinationId)
+            launchSingleTop = true
+        }
+    }
+) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -36,43 +46,39 @@ fun DashboardScreen(username: String, navController: NavController) {
                         // Profile Photo Placeholder
                         Box(
                             modifier = Modifier
-                                .size(40.dp) // Set size of the profile photo
+                                .size(40.dp)
                                 .clip(CircleShape)
-                                .background(Color.Gray) // Placeholder color
-                        ) {
-                            // Optional: You can use Image if you have an actual profile photo
-                            // Image(painter = painterResource(id = R.drawable.profile), contentDescription = "Profile Photo")
-                        }
-                    }
+                                .background(Color.Gray)
+                        )
 
-                        Spacer(modifier = Modifier.width(8.dp)) // Space between the photo and the text
+                        Spacer(modifier = Modifier.width(8.dp))
 
                         // Greeting Text
-                    Text(
-                        text = buildAnnotatedString {
-                            append("Halo, ")
-                            withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                                append(username)
-                            }
-                            append("!")
-                        },
-                        style = MaterialTheme.typography.h6.copy(color = Color.White), // Set the text color to white
-                    ) // Dynamic greeting
+                        Text(
+                            text = buildAnnotatedString {
+                                append("Halo, ")
+                                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                                    append(username)
+                                }
+                                append("!")
+                            },
+                            style = MaterialTheme.typography.h6.copy(color = Color.White),
+                        )
+                    }
                 },
                 actions = {
                     IconButton(onClick = { /* Notification action */ }) {
                         Icon(
                             imageVector = Icons.Filled.Notifications,
                             contentDescription = "Notifications",
-                            tint = Color.Yellow // Set the icon color to yellow
+                            tint = Color.Yellow
                         )
                     }
                 },
                 backgroundColor = Purple80,
-                modifier = Modifier.height(100.dp),// Purple color for the top bar
+                modifier = Modifier.height(100.dp),
             )
         },
-
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -83,30 +89,30 @@ fun DashboardScreen(username: String, navController: NavController) {
             CustomButtons()
             Spacer(modifier = Modifier.height(6.dp))
             Text("Jadwal Konsultasimu", style = MaterialTheme.typography.h6)
-            // Konsultasi schedule card
-            Spacer(modifier = Modifier.height(6.dp))
 
+            Spacer(modifier = Modifier.height(6.dp))
             ConsultationCard()
-            // Emergency Consultation
+
             Spacer(modifier = Modifier.height(16.dp))
             Text("Konsultasi Darurat", style = MaterialTheme.typography.h6)
             Spacer(modifier = Modifier.height(6.dp))
             ConsultationNowCard()
 
-            // Artikel section
+            // Artikel section with clickable modifier
             Spacer(modifier = Modifier.height(16.dp))
-            Text("Artikel", style = MaterialTheme.typography.h6)
+            Text(
+                text = "Artikel",
+                style = MaterialTheme.typography.h6,
+                modifier = Modifier
+                    .clickable { onNavigateToArticle() }
+                    .padding(vertical = 8.dp)
+            )
 
-
-            // Additional content can go here
             Spacer(modifier = Modifier.height(16.dp))
             Text("More personalized content and options can go here.")
         }
     }
 }
-
-
-
 
 @Preview(showBackground = true)
 @Composable
