@@ -14,6 +14,7 @@ fun BottomNavigation(
         BottomNavItem.Home,
         BottomNavItem.Article,
         BottomNavItem.Konsultasi,
+        BottomNavItem.Forum,
         BottomNavItem.Profile
     )
     NavigationBar(

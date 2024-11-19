@@ -22,6 +22,7 @@ import androidx.navigation.compose.rememberNavController
 import com.chrisp.calmspace.feature.artikel.ArticleDetailScreen
 import com.chrisp.calmspace.feature.artikel.ArticleScreen
 import com.chrisp.calmspace.feature.auth.RegistrationScreen
+import com.chrisp.calmspace.feature.forum.ForumScreen
 import com.chrisp.calmspace.feature.home.DashboardScreen
 import com.chrisp.calmspace.feature.onboarding.OnboardingScreen
 import com.chrisp.calmspace.model.ArticleModel
@@ -32,6 +33,7 @@ sealed class Screen {
     object Home : Screen()
     object ArticleList : Screen()
     data class ArticleDetail(val article: ArticleModel) : Screen()
+//    object Forum : Screen()
 }
 
 sealed class BottomNavItem(
@@ -121,12 +123,14 @@ private fun MainContent(
                     currentRoute = when (currentScreen) {
                         is Screen.Home -> "home"
                         is Screen.ArticleList -> "article"
+//                        is Screen.Forum -> "forum"
                         else -> null
                     },
                     onNavigate = { route ->
                         when (route) {
                             "home" -> onScreenChange(Screen.Home)
                             "article" -> onScreenChange(Screen.ArticleList)
+//                            "forum" -> onScreenChange(Screen.Forum)"
                             // Add other routes as needed
                         }
                     }
@@ -157,6 +161,10 @@ private fun MainContent(
                         }
                     )
                 }
+//                is Screen.Forum -> {
+//                    ForumScreen(navController)
+//                }
+
             }
         }
     }

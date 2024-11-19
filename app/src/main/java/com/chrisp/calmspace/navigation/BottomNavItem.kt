@@ -21,9 +21,15 @@ sealed class BottomNavItem(
         title = "Konsultasi",
         icon = R.drawable.ic_konsultasi // Make sure this exists in drawable
     )
+    object Forum : BottomNavItem(
+        route = "forum",
+        title = "Forum",
+        icon = R.drawable.ic_forum // Make sure this exists in drawable
+    )
     object Profile : BottomNavItem(
         route = "profile",
         title = "Profil",
         icon = R.drawable.ic_profile // Make sure this exists in drawable
     )
+
 }
