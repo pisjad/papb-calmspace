@@ -3,11 +3,13 @@
 package com.chrisp.calmspace.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.chrisp.calmspace.feature.artikel.ArticleDetailScreen
 import com.chrisp.calmspace.feature.artikel.ArticleScreen
@@ -19,6 +21,15 @@ sealed class ArticleDestination(val route: String) {
         fun createRoute(articleId: Int) = "article_detail/$articleId"
     }
 }
+//buat connect ke dashboard
+@Composable
+fun AppContent() {
+    val navController = rememberNavController()
+    val articleViewModel: ArticleViewModel = viewModel()
+
+    MainNavigation(navController = navController, viewModel = articleViewModel)
+}
+
 
 fun NavGraphBuilder.articleGraph(
     navController: NavHostController,
@@ -50,4 +61,6 @@ fun NavGraphBuilder.articleGraph(
             )
         }
     }
+
+
 }

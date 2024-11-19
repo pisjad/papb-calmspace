@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.material.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
@@ -20,21 +21,23 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.*
+import com.chrisp.calmspace.feature.artikel.ArticleViewModel
 import com.chrisp.calmspace.feature.auth.LoginScreen
+import com.chrisp.calmspace.navigation.ArticleDestination
 import com.chrisp.calmspace.ui.theme.Purple80
 
 @Composable
 fun DashboardScreen(
     username: String,
     navController: NavController,
+    viewModel: ArticleViewModel = viewModel(),
     onNavigateToArticle: () -> Unit = {
-        navController.navigate("article") {
-            popUpTo(navController.graph.startDestinationId)
-            launchSingleTop = true
-        }
+        navController.navigate(ArticleDestination.ArticleList.route)
     }
+
 ) {
     Scaffold(
         topBar = {
@@ -107,6 +110,21 @@ fun DashboardScreen(
                     .clickable { onNavigateToArticle() }
                     .padding(vertical = 8.dp)
             )
+
+//            LazyColumn {
+//                items(viewModel.filteredArticles) { article ->
+//                    ArticleCard(
+//                        title = article.title,
+//                        date = article.date,
+//                        onClick = {
+//                            navController.navigate(
+//                                ArticleDestination.ArticleDetail.createRoute(article.id)
+//                            )
+//                        }
+//                    )
+//                }
+//            }
+
 
             Spacer(modifier = Modifier.height(16.dp))
             Text("More personalized content and options can go here.")

@@ -1,5 +1,6 @@
 package com.chrisp.calmspace.feature.auth
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -25,12 +26,16 @@ import com.chrisp.calmspace.ui.theme.Purple100
 
 
 @Composable
-fun RegistrationScreen( onRegisterComplete: () -> Unit) {
+fun RegistrationScreen(
+    onRegisterComplete: () -> Unit,
+    viewModel: RegisterViewModel = RegisterViewModel()
+) {
     var fullName by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var phoneNumber by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    var passwordVisible by remember { mutableStateOf(false) }
+    val isLoading = viewModel.isLoading.value
+    val errorMessage = viewModel.errorMessage.value
 
     Column(
         modifier = Modifier
@@ -158,16 +163,39 @@ fun RegistrationScreen( onRegisterComplete: () -> Unit) {
 
         // Register Button
         Button(
-            onClick = { /* Handle registration */ },
+            onClick = {
+                viewModel.register(
+                    fullName = fullName,
+                    email = email,
+                    password = password
+                ) { success, message ->
+                    if (success) {
+                        onRegisterComplete()
+                    } else {
+                        // Handle registration error
+                        message?.let { Log.e("Registration", it) }
+                    }
+                }
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(48.dp)
                 .padding(start = 10.dp, end = 10.dp),
-            colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF3A285F)),
-            elevation = ButtonDefaults.elevation(defaultElevation = 4.dp)
+            enabled = !isLoading,
+            colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF3A285F))
         ) {
-            Text(text = "Daftar", color = Color.White)
+            Text(text = if (isLoading) "Loading..." else "Daftar", color = Color.White)
         }
+
+        // Show error message if available
+        if (errorMessage != null) {
+            Text(
+                text = errorMessage,
+                color = Color.Red,
+                modifier = Modifier.padding(top = 8.dp)
+            )
+        }
+    }
         Spacer(modifier = Modifier.height(16.dp))
 
         // Or Divider
@@ -208,4 +236,4 @@ fun RegistrationScreen( onRegisterComplete: () -> Unit) {
             }
         }
     }
-}
+
