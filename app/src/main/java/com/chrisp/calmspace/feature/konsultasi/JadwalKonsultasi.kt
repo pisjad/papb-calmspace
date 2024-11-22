@@ -16,24 +16,72 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.foundation.clickable
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.chrisp.calmspace.ui.theme.ChevronLeft
+import com.chrisp.calmspace.ui.theme.Purple100
+import com.chrisp.calmspace.ui.theme.Purple80
+import com.chrisp.calmspace.ui.theme.White100
 
 // Main Composable Screen
 @Composable
 fun ConsultationScheduleScreen(doctorViewModel: DoctorViewModel = viewModel()) {
     val doctorSchedule = doctorViewModel.doctorSchedule.value
 
+
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
-            .padding(16.dp),
+            .padding(0.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+
+        TopBar()
         // Doctor Card using ViewModel data
         DoctorCard(doctorSchedule)
     }
+}
+
+@Composable
+fun TopBar() {
+    TopAppBar(
+        title = {
+            Column {
+                Text(
+                    text = "Jadwal Konsultasi",
+                    color = Color.White,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    text = "Minggu ini",
+                    color = Color.White.copy(alpha = 0.7f),
+                    fontSize = 14.sp
+                )
+            }
+        },
+        backgroundColor = Purple80, // Warna ungu sesuai dengan gambar
+        elevation = 4.dp,
+        navigationIcon = {
+            IconButton(
+                onClick = { /* Handle click action */ },
+                modifier = Modifier
+                    .size(40.dp)
+                    .padding(start = 0.dp, bottom = 8.dp)
+            ) {
+                Icon(
+                    imageVector = ChevronLeft,
+                    contentDescription = "Chevron Left Button",
+                    tint = Color.White
+                )
+            }
+        },
+        modifier = Modifier.fillMaxWidth()
+    )
 }
 
 // Composable to display Doctor information
@@ -50,7 +98,7 @@ fun DoctorCard(schedule: DoctorSchedule) {
             modifier = Modifier
                 .padding(16.dp)
                 .fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.Start,
         ) {
             // Doctor's Profile Image
 //            AsyncImage(
@@ -68,7 +116,8 @@ fun DoctorCard(schedule: DoctorSchedule) {
             Text(
                 text = schedule.name,
                 fontSize = 20.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+
             )
 
             // Consultation Date and Time
@@ -82,9 +131,13 @@ fun DoctorCard(schedule: DoctorSchedule) {
 
             Button(
                 onClick = { /* Aksi untuk mulai konsultasi */ },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                colors = ButtonDefaults.buttonColors(backgroundColor = Purple80)
             ) {
-                Text("Mulai Konsultasi")
+                Text(text = "Mulai Konsultasi",
+                    fontSize = 14.sp,
+                    color = Color.White
+                )
             }
         }
     }
