@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.chrisp.calmspace" />
+                  <option name="mobileSdkAppId" value="1:570908485615:android:ebac5b6f87440b9f9c781a" />
+                  <option name="projectId" value="calmspace-ebf8c" />
+                  <option name="projectNumber" value="570908485615" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />
