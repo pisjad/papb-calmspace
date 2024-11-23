@@ -1,3 +1,4 @@
+
 package com.chrisp.calmspace.feature.onboarding
 
 import androidx.compose.foundation.Image
@@ -15,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -88,6 +90,17 @@ fun OnboardingScreen(
                         fontSize = 16.sp,
                     )
                 }
+                if (currentIndex == viewModel.onboardingItems.size - 1) {
+                    // Add additional text below the button for the last onboarding screen
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text(
+                        text = "Kami siap membantu Anda mencapai ketenangan.",
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Normal,
+                        color = White20,
+                        textAlign = TextAlign.Center
+                    )
+                }
                 if (currentIndex > 0) {
                     Button(
                         onClick = { viewModel.previousScreen() },
@@ -108,3 +121,10 @@ fun OnboardingScreen(
         }
     }
 }
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewOnboardingScreen() {
+    OnboardingScreen(onFinish = { /* Handle finish action */ })
+}
+

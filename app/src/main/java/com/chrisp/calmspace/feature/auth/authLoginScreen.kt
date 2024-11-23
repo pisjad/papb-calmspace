@@ -31,9 +31,12 @@ import com.chrisp.calmspace.ui.theme.White40
 import androidx.compose.runtime.*
 import androidx.lifecycle.viewmodel.compose.viewModel
 
-
 @Composable
-fun LoginScreen(onLoginSuccess: (String) -> Unit, viewModel: AuthViewModel = viewModel()) {
+fun LoginScreen(
+    onLoginSuccess: (String) -> Unit,
+    onBackToOnboarding: () -> Unit, // New parameter for back navigation
+    viewModel: AuthViewModel = viewModel()
+) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     val currentUser by remember { viewModel.currentUser }
@@ -56,7 +59,10 @@ fun LoginScreen(onLoginSuccess: (String) -> Unit, viewModel: AuthViewModel = vie
         verticalArrangement = Arrangement.Center
     ) {
         IconButton(
-            onClick = { /* Handle click action */ },
+            onClick = {
+                // Call the back navigation callback when clicked
+                onBackToOnboarding()
+            },
             modifier = Modifier
                 .size(40.dp)
                 .align(Alignment.Start)
@@ -64,7 +70,7 @@ fun LoginScreen(onLoginSuccess: (String) -> Unit, viewModel: AuthViewModel = vie
         ) {
             Icon(
                 imageVector = ChevronLeft,
-                contentDescription = "Chevron Left Button",
+                contentDescription = "Back to Onboarding",
                 tint = Purple100
             )
         }
@@ -74,14 +80,18 @@ fun LoginScreen(onLoginSuccess: (String) -> Unit, viewModel: AuthViewModel = vie
             fontWeight = FontWeight.Bold,
             fontSize = 24.sp,
             color = Purple100,
-            modifier = Modifier.padding(start = 10.dp, bottom = 20.dp).align(Alignment.Start)
+            modifier = Modifier
+                .padding(start = 10.dp, bottom = 20.dp)
+                .align(Alignment.Start)
         )
 
         Text(
             text = "Hai! Selamat Datang di CalmSpace ✨",
             fontSize = 15.sp,
             color = White100,
-            modifier = Modifier.padding(start = 10.dp, bottom = 20.dp).align(Alignment.Start)
+            modifier = Modifier
+                .padding(start = 10.dp, bottom = 20.dp)
+                .align(Alignment.Start)
         )
 
         // Email Field
@@ -90,7 +100,9 @@ fun LoginScreen(onLoginSuccess: (String) -> Unit, viewModel: AuthViewModel = vie
             fontWeight = FontWeight.Bold,
             fontSize = 18.sp,
             color = Purple100,
-            modifier = Modifier.padding(start = 10.dp, bottom = 5.dp).align(Alignment.Start)
+            modifier = Modifier
+                .padding(start = 10.dp, bottom = 5.dp)
+                .align(Alignment.Start)
         )
         OutlinedTextField(
             value = email,
@@ -115,7 +127,9 @@ fun LoginScreen(onLoginSuccess: (String) -> Unit, viewModel: AuthViewModel = vie
             fontWeight = FontWeight.Bold,
             fontSize = 18.sp,
             color = Purple100,
-            modifier = Modifier.padding(start = 10.dp, bottom = 5.dp).align(Alignment.Start)
+            modifier = Modifier
+                .padding(start = 10.dp, bottom = 5.dp)
+                .align(Alignment.Start)
         )
         OutlinedTextField(
             value = password,
@@ -162,15 +176,7 @@ fun LoginScreen(onLoginSuccess: (String) -> Unit, viewModel: AuthViewModel = vie
             elevation = ButtonDefaults.elevation(defaultElevation = 4.dp),
             colors = ButtonDefaults.buttonColors(backgroundColor = Purple100)
         ) {
-            if (isLoading) {
-                // Resolving ambiguity by providing only the necessary parameters
-//                CircularProgressIndicator(
-//                    modifier = Modifier.size(24.dp).align(Alignment.CenterVertically),
-//                    color = Color.White // Only specify color
-//                )
-            } else {
-                Text(text = "Login", color = Color.White) // Set text color to white for contrast
-            }
+            Text(text = "Login", color = Color.White) // Set text color to white for contrast
         }
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -218,5 +224,8 @@ fun LoginScreen(onLoginSuccess: (String) -> Unit, viewModel: AuthViewModel = vie
 @Preview(showBackground = true)
 @Composable
 fun PreviewLoginScreen() {
-    LoginScreen(onLoginSuccess = {})
+    LoginScreen(
+        onLoginSuccess = {},
+        onBackToOnboarding = {} // Provide an empty lambda for preview
+    )
 }

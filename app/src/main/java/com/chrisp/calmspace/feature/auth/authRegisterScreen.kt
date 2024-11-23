@@ -1,3 +1,4 @@
+
 package com.chrisp.calmspace.feature.auth
 
 import android.util.Log
@@ -24,10 +25,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.chrisp.calmspace.ui.theme.ChevronLeft
 import com.chrisp.calmspace.ui.theme.Purple100
 
-
 @Composable
 fun RegistrationScreen(
     onRegisterComplete: () -> Unit,
+    onNavigateBack: () -> Unit, // New parameter for back navigation
     viewModel: RegisterViewModel = RegisterViewModel()
 ) {
     var fullName by remember { mutableStateOf("") }
@@ -43,7 +44,7 @@ fun RegistrationScreen(
             .padding(horizontal = 16.dp, vertical = 80.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        IconButton(onClick = { /* Handle click action */ },
+        IconButton(onClick = { onNavigateBack() }, // Navigate back to onboarding
             modifier = Modifier
                 .size(40.dp)
                 .align(Alignment.Start)
@@ -52,8 +53,6 @@ fun RegistrationScreen(
                 imageVector = ChevronLeft,
                 contentDescription = "Chevron Left Button",
                 tint = Purple100,
-                // Set a custom size for the icon
-
             )
         }
         Text(
@@ -157,7 +156,6 @@ fun RegistrationScreen(
                 .fillMaxWidth()
                 .padding(start = 10.dp, end = 10.dp)
                 .background(Color(0xFFF5F5F5)),
-
         )
         Spacer(modifier = Modifier.height(24.dp))
 
@@ -196,44 +194,54 @@ fun RegistrationScreen(
             )
         }
     }
-        Spacer(modifier = Modifier.height(16.dp))
+    Spacer(modifier = Modifier.height(16.dp))
 
-        // Or Divider
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 10.dp)
-        ) {
-            Divider(modifier = Modifier.weight(1f))
-            Text(
-                text = "Atau",
-                modifier = Modifier.padding(horizontal = 8.dp),
-                color = Color.Gray
-            )
-            Divider(modifier = Modifier.weight(1f))
-        }
-        Spacer(modifier = Modifier.height(16.dp))
+    // Or Divider
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 10.dp)
+    ) {
+        Divider(modifier = Modifier.weight(1f))
+        Text(
+            text = "Atau",
+            modifier = Modifier.padding(horizontal = 8.dp),
+            color = Color.Gray
+        )
+        Divider(modifier = Modifier.weight(1f))
+    }
+    Spacer(modifier = Modifier.height(16.dp))
 
-        // Google Sign-Up Button
-        OutlinedButton(
-            onClick = { /* Handle Google Sign-Up */ },
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(48.dp)
-                .padding(start = 10.dp, end = 10.dp),
-            colors = ButtonDefaults.outlinedButtonColors(backgroundColor = Color(0xFFF5F5F5)) ,
-            elevation = ButtonDefaults.elevation(defaultElevation = 4.dp)
-        ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-//                Icon(
-//                    painter = painterResource(id = R.drawable.google),
-//                    contentDescription = "Google Icon",
-//                    modifier = Modifier.size(24.dp)
-//                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(text = "Daftar dengan Google", color = Color.Black)
-            }
+    // Google Sign-Up Button
+    OutlinedButton(
+        onClick = { /* Handle Google Sign-Up */ },
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(48.dp)
+            .padding(start = 10.dp, end = 10.dp),
+        colors = ButtonDefaults.outlinedButtonColors(backgroundColor = Color(0xFFF5F5F5)) ,
+        elevation = ButtonDefaults.elevation(defaultElevation = 4.dp)
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            // Uncomment and set the Google icon if available
+//            Icon(
+//                painter = painterResource(id = R.drawable.google),
+//                contentDescription = "Google Icon",
+//                modifier = Modifier.size(24.dp)
+//            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(text = "Daftar dengan Google", color = Color.Black)
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewRegistrationScreen() {
+    RegistrationScreen(
+        onRegisterComplete = { /* Handle registration complete */ },
+        onNavigateBack = { /* Handle back navigation */ } // Provide an empty lambda for preview
+    )
+}
 
