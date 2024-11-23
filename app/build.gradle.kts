@@ -1,6 +1,7 @@
 plugins {
-    alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
+    id("com.android.application")
+    id("org.jetbrains.kotlin.android")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -79,6 +80,9 @@ dependencies {
     implementation ("io.coil-kt:coil-svg:2.2.2")    // Add this for SVG support
 
     implementation ("com.google.firebase:firebase-auth-ktx:21.0.1")
+    implementation(platform("com.google.firebase:firebase-bom:33.6.0"))
+    implementation("com.google.firebase:firebase-firestore:25.1.1")
+    implementation("com.google.firebase:firebase-analytics")
     implementation("io.coil-kt:coil-compose:2.1.0")
 
 

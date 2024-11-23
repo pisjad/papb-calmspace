@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import com.chrisp.calmspace.navigation.Navigation
 import com.chrisp.calmspace.ui.theme.CalmSpaceTheme
 
 class MainActivity : ComponentActivity() {
@@ -18,11 +19,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             CalmSpaceTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    MainApp()
-                }
+               Navigation()
             }
         }
     }

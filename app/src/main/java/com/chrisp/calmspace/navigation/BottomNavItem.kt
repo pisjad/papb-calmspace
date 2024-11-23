@@ -7,27 +7,27 @@ sealed class BottomNavItem(
     @DrawableRes val icon: Int
 ) {
     object Home : BottomNavItem(
-        route = "home",
+        route = Screen.Home.route,
         title = "Beranda",
         icon = R.drawable.ic_home // Make sure this exists in drawable
     )
     object Article : BottomNavItem(
-        route = "article",
+        route = Screen.Article.route,
         title = "Artikel",
         icon = R.drawable.ic_article // Make sure this exists in drawable
     )
     object Konsultasi : BottomNavItem(
-        route = "konsultasi",
+        route = Screen.Konsultasi.route,
         title = "Konsultasi",
         icon = R.drawable.ic_konsultasi // Make sure this exists in drawable
     )
     object Forum : BottomNavItem(
-        route = "forum",
+        route = Screen.Forum.route,
         title = "Forum",
         icon = R.drawable.ic_forum // Make sure this exists in drawable
     )
     object Profile : BottomNavItem(
-        route = "profile",
+        route = Screen.Profile.route,
         title = "Profil",
         icon = R.drawable.ic_profile // Make sure this exists in drawable
     )

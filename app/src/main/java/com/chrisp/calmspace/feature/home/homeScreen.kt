@@ -26,21 +26,26 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.*
 import com.chrisp.calmspace.feature.artikel.ArticleViewModel
 import com.chrisp.calmspace.feature.auth.LoginScreen
-import com.chrisp.calmspace.navigation.ArticleDestination
+import com.chrisp.calmspace.navigation.BottomNavigationBar
+import com.chrisp.calmspace.navigation.Screen
 import com.chrisp.calmspace.ui.theme.Purple80
 
 @Composable
 fun DashboardScreen(
-    username: String,
+//    username: String,
     navController: NavController,
-    viewModel: ArticleViewModel = viewModel(),
-    onNavigateToArticle: () -> Unit = {
-        navController.navigate(ArticleDestination.ArticleList.route)
-    }
+//    onNavigateToArticle: () -> Unit = {
+//        navController.navigate(ArticleDestination.ArticleList.route)
+//    }
 
 
 ) {
+//    viewModel: ArticleViewModel = viewModel()
+
     Scaffold(
+        bottomBar = {
+            BottomNavigationBar(navController)
+        },
         topBar = {
             TopAppBar(
                 title = {
@@ -62,7 +67,7 @@ fun DashboardScreen(
                             text = buildAnnotatedString {
                                 append("Halo, ")
                                 withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                                    append(username)
+                                    append("Sajjad")
                                 }
                                 append("!")
                             },
@@ -90,7 +95,7 @@ fun DashboardScreen(
                 .fillMaxSize()
                 .padding(16.dp)
         ) {
-            CustomButtons()
+            CustomButtons(navController)
             Spacer(modifier = Modifier.height(6.dp))
             Text("Jadwal Konsultasimu", style = MaterialTheme.typography.h6)
 
@@ -108,7 +113,13 @@ fun DashboardScreen(
                 text = "Artikel",
                 style = MaterialTheme.typography.h6,
                 modifier = Modifier
-                    .clickable { onNavigateToArticle() }
+                    .clickable {
+                        navController.navigate(Screen.Article.route) {
+                            popUpTo(Screen.Home.route) {
+                                inclusive = true
+                            }
+                        }
+                    }
                     .padding(vertical = 8.dp)
             )
 
@@ -133,8 +144,8 @@ fun DashboardScreen(
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    DashboardScreen(username = "Qyan", navController = rememberNavController())
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun DefaultPreview() {
+//    DashboardScreen(username = "Qyan", navController = rememberNavController())
+//}

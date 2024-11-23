@@ -15,69 +15,78 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import com.chrisp.calmspace.navigation.BottomNavigationBar
 
 @Composable
-fun KonsultasiScreen(viewModel: KonsultasiViewModel = viewModel()) {
+fun KonsultasiScreen(navController: NavController) {
+    val viewModel: KonsultasiViewModel = viewModel()
     val state by viewModel.state.collectAsState()
 
-    Column(modifier = Modifier.fillMaxSize()) {
-        // Search Bar
-        SearchBar(state.searchQuery, onSearch = { query ->
-            viewModel.updateSearchQuery(query)
-        })
+    Scaffold(
+        bottomBar = {BottomNavigationBar(navController)}
+    ) {
+        paddingValues ->
+        Column(modifier = Modifier
+            .padding(paddingValues).fillMaxSize()) {
+            // Search Bar
+            SearchBar(state.searchQuery, onSearch = { query ->
+                viewModel.updateSearchQuery(query)
+            })
 
-        // Tab Row
-        TabRow(selectedTabIndex = state.selectedTab) {
-            state.tabs.forEachIndexed { index, title ->
-                Tab(
-                    selected = state.selectedTab == index,
-                    onClick = { viewModel.updateSelectedTab(index) }
-                ) {
-                    Text(
-                        text = title,
-                        modifier = Modifier.padding(16.dp)
+            // Tab Row
+            TabRow(selectedTabIndex = state.selectedTab) {
+                state.tabs.forEachIndexed { index, title ->
+                    Tab(
+                        selected = state.selectedTab == index,
+                        onClick = { viewModel.updateSelectedTab(index) }
+                    ) {
+                        Text(
+                            text = title,
+                            modifier = Modifier.padding(16.dp)
+                        )
+                    }
+                }
+            }
+
+            // Content
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .weight(1f)
+            ) {
+                when (state.selectedTab) {
+                    0 -> Text(
+                        "Aktif Content",
+                        Modifier.align(Alignment.Center),
+                        fontSize = 14.sp, // Ukuran font konten
+                        fontWeight = FontWeight.Bold // Tulisan tebal
+                    )
+                    1 -> Text(
+                        "Terjadwal Content",
+                        Modifier.align(Alignment.Center),
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                    2 -> Text(
+                        "Riwayat Content",
+                        Modifier.align(Alignment.Center),
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Bold
                     )
                 }
             }
-        }
 
-        // Content
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .weight(1f)
-        ) {
-            when (state.selectedTab) {
-                0 -> Text(
-                    "Aktif Content",
-                    Modifier.align(Alignment.Center),
-                    fontSize = 14.sp, // Ukuran font konten
-                    fontWeight = FontWeight.Bold // Tulisan tebal
-                )
-                1 -> Text(
-                    "Terjadwal Content",
-                    Modifier.align(Alignment.Center),
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Bold
-                )
-                2 -> Text(
-                    "Riwayat Content",
-                    Modifier.align(Alignment.Center),
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Bold
-                )
+            // Floating Action Button
+            FloatingActionButton(
+                onClick = { /* TODO: Add action */ },
+                modifier = Modifier
+                    .align(Alignment.End)
+                    .padding(16.dp),
+                backgroundColor = MaterialTheme.colors.primary
+            ) {
+                Text("+", color = Color.White)
             }
-        }
-
-        // Floating Action Button
-        FloatingActionButton(
-            onClick = { /* TODO: Add action */ },
-            modifier = Modifier
-                .align(Alignment.End)
-                .padding(16.dp),
-            backgroundColor = MaterialTheme.colors.primary
-        ) {
-            Text("+", color = Color.White)
         }
     }
 }
@@ -100,8 +109,8 @@ fun SearchBar(query: String, onSearch: (String) -> Unit) {
     )
 }
 
-@Composable
+/*@Composable
 @Preview(showBackground = true)
 fun prev() {
     KonsultasiScreen()
-}
+}*/

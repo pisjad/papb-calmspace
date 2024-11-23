@@ -21,85 +21,95 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.chrisp.calmspace.model.ArticleModel
+import com.chrisp.calmspace.navigation.BottomNavigationBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ArticleScreen(
-    onArticleClick: (ArticleModel) -> Unit,
+    navController: NavController,
     modifier: Modifier = Modifier,
-    viewModel: ArticleViewModel = viewModel()
 ) {
+    val viewModel: ArticleViewModel = viewModel()
+
     val selectedTab by viewModel.selectedTab
     val searchQuery by viewModel.searchQuery
     val articles = viewModel.filteredArticles
     val tabs = listOf("Semua", "Artikel", "Video")
 
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(Color.White)
+    Scaffold(
+        bottomBar = { BottomNavigationBar(navController) }
     ) {
-        SearchBar(
-            query = searchQuery,
-            onQueryChange = viewModel::setSearchQuery,
-            onSearch = { },
-            active = false,
-            onActiveChange = { },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            placeholder = { Text("Cari artikel atau video...") },
-            leadingIcon = { }
-        ) { }
-
-        TabRow(
-            selectedTabIndex = selectedTab,
-            modifier = Modifier.fillMaxWidth(),
-            containerColor = Color(0xFFF5F5F5),
-            contentColor = Color(0xFF6750A4),
-            indicator = { }
+        paddingValues ->
+        Column(
+            modifier = modifier
+                .padding(paddingValues)
+                .fillMaxSize()
+                .background(Color.White)
         ) {
-            tabs.forEachIndexed { index, title ->
-                Tab(
-                    selected = selectedTab == index,
-                    onClick = { viewModel.setSelectedTab(index) },
-                    modifier = Modifier.padding(horizontal = 8.dp)
-                ) {
-                    Text(
-                        text = title,
-                        modifier = Modifier.padding(vertical = 12.dp),
-                        color = if (selectedTab == index) Color(0xFF6750A4) else Color.Gray
-                    )
+            SearchBar(
+                query = searchQuery,
+                onQueryChange = viewModel::setSearchQuery,
+                onSearch = { },
+                active = false,
+                onActiveChange = { },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                placeholder = { Text("Cari artikel atau video...") },
+                leadingIcon = { }
+            ) { }
+
+            TabRow(
+                selectedTabIndex = selectedTab,
+                modifier = Modifier.fillMaxWidth(),
+                containerColor = Color(0xFFF5F5F5),
+                contentColor = Color(0xFF6750A4),
+                indicator = { }
+            ) {
+                tabs.forEachIndexed { index, title ->
+                    Tab(
+                        selected = selectedTab == index,
+                        onClick = { viewModel.setSelectedTab(index) },
+                        modifier = Modifier.padding(horizontal = 8.dp)
+                    ) {
+                        Text(
+                            text = title,
+                            modifier = Modifier.padding(vertical = 12.dp),
+                            color = if (selectedTab == index) Color(0xFF6750A4) else Color.Gray
+                        )
+                    }
                 }
             }
-        }
 
-        if (articles.isEmpty()) {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = "Tidak ada artikel yang ditemukan",
-                    color = Color.Gray
-                )
-            }
-        } else {
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                items(articles) { article ->
-                    ArticleCard(
-                        article = article,
-                        onArticleClick = onArticleClick
+            if (articles.isEmpty()) {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "Tidak ada artikel yang ditemukan",
+                        color = Color.Gray
                     )
+                }
+            } else {
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    contentPadding = PaddingValues(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    items(articles) { article ->
+                        ArticleCard(
+                            article = article,
+                            onArticleClick = {  }
+                        )
+                    }
                 }
             }
         }
     }
+
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

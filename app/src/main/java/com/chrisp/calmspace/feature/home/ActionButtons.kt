@@ -16,43 +16,58 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import com.chrisp.calmspace.navigation.Screen
 import com.chrisp.calmspace.ui.theme.Purple80
 import com.chrisp.calmspace.ui.theme.White100
 
 @Composable
-fun CustomButtons() {
+fun CustomButtons(navController: NavController) {
     // Row to place the buttons side by side
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(0.dp),
+            .padding(0.dp)
+        ,
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
         // Konsultasi Button
         ButtonWithIcon(
             icon = Icons.Filled.Info,
-            text = "Konsultasi"
+            text = "Konsultasi",
+            route = Screen.Konsultasi.route,
+            navController
         )
 
         // Forum Button
         ButtonWithIcon(
             icon = Icons.Filled.Info,
-            text = "Forum"
+            text = "Forum",
+            route = Screen.Forum.route,
+            navController
         )
 
         // Artikel Button
         ButtonWithIcon(
             icon = Icons.Filled.ThumbUp,
-            text = "Artikel"
+            text = "Artikel",
+            route = Screen.Article.route,
+            navController
         )
     }
 }
 
 @Composable
-fun ButtonWithIcon(icon: ImageVector, text: String) {
+fun ButtonWithIcon(icon: ImageVector, text: String, route: String, navController: NavController) {
     Button(
-        onClick = { /* Handle button click */ },
+        onClick = {
+            navController.navigate(route) {
+                popUpTo(Screen.Home.route) {
+                    inclusive = true
+                }
+            }
+        },
         modifier = Modifier
             .size(110.dp) // Size of the button
             .padding(1.dp), // Padding around the button
@@ -83,9 +98,4 @@ fun ButtonWithIcon(icon: ImageVector, text: String) {
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun PreviewButtons() {
-    CustomButtons()
-}
 
