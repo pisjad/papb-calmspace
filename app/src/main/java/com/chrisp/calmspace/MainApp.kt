@@ -21,19 +21,19 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.chrisp.calmspace.feature.artikel.ArticleDetailScreen
 import com.chrisp.calmspace.feature.artikel.ArticleScreen
-import com.chrisp.calmspace.feature.auth.RegistrationScreen
-import com.chrisp.calmspace.feature.forum.ForumScreen
 import com.chrisp.calmspace.feature.home.DashboardScreen
-import com.chrisp.calmspace.feature.onboarding.OnboardingScreen
+import com.chrisp.calmspace.feature.konsultasi.KonsultasiScreen
+import com.chrisp.calmspace.feature.forum.ForumScreen
+import com.chrisp.calmspace.feature.profile.ProfileScreen
 import com.chrisp.calmspace.model.ArticleModel
 
 sealed class Screen {
-    // object Onboarding : Screen()  // Commented out
-    // object AuthRegister : Screen() // Commented out
     object Home : Screen()
     object ArticleList : Screen()
     data class ArticleDetail(val article: ArticleModel) : Screen()
-//    object Forum : Screen()
+    object Konsultasi : Screen()
+    object Forum : Screen()
+    object Profile : Screen()
 }
 
 sealed class BottomNavItem(
@@ -70,42 +70,14 @@ sealed class BottomNavItem(
 
 @Composable
 fun MainApp() {
-    // Changed initial screen to Home instead of Onboarding
     var currentScreen by remember { mutableStateOf<Screen>(Screen.Home) }
     val navController = rememberNavController()
 
-    // Removed when block and directly showing MainContent
     MainContent(
         currentScreen = currentScreen,
         onScreenChange = { newScreen -> currentScreen = newScreen },
         navController = navController
     )
-
-    /* Commented out authentication flow
-    when (val screen = currentScreen) {
-        is Screen.Onboarding -> {
-            OnboardingScreen(
-                onFinish = {
-                    currentScreen = Screen.AuthRegister
-                }
-            )
-        }
-        is Screen.AuthRegister -> {
-            RegistrationScreen(
-                onRegisterComplete = {
-                    currentScreen = Screen.Home
-                }
-            )
-        }
-        else -> {
-            MainContent(
-                currentScreen = screen,
-                onScreenChange = { newScreen -> currentScreen = newScreen },
-                navController = navController
-            )
-        }
-    }
-    */
 }
 
 @Composable
@@ -116,22 +88,24 @@ private fun MainContent(
 ) {
     Scaffold(
         bottomBar = {
-            if (currentScreen is Screen.Home ||
-                currentScreen is Screen.ArticleList ||
-                currentScreen is Screen.ArticleDetail) {
+            // Show bottom bar for all main screens except ArticleDetail
+            if (currentScreen !is Screen.ArticleDetail) {
                 BottomNavigationBar(
                     currentRoute = when (currentScreen) {
                         is Screen.Home -> "home"
                         is Screen.ArticleList -> "article"
-//                        is Screen.Forum -> "forum"
+                        is Screen.Konsultasi -> "konsultasi"
+                        is Screen.Forum -> "forum"
+                        is Screen.Profile -> "profile"
                         else -> null
                     },
                     onNavigate = { route ->
                         when (route) {
                             "home" -> onScreenChange(Screen.Home)
                             "article" -> onScreenChange(Screen.ArticleList)
-//                            "forum" -> onScreenChange(Screen.Forum)"
-                            // Add other routes as needed
+                            "konsultasi" -> onScreenChange(Screen.Konsultasi)
+                            "forum" -> onScreenChange(Screen.Forum)
+                            "profile" -> onScreenChange(Screen.Profile)
                         }
                     }
                 )
@@ -161,10 +135,9 @@ private fun MainContent(
                         }
                     )
                 }
-//                is Screen.Forum -> {
-//                    ForumScreen(navController)
-//                }
-
+                Screen.Forum -> TODO()
+                Screen.Konsultasi -> TODO()
+                Screen.Profile -> TODO()
             }
         }
     }

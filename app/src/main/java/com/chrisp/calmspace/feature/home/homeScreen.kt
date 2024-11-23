@@ -38,6 +38,7 @@ fun DashboardScreen(
         navController.navigate(ArticleDestination.ArticleList.route)
     }
 
+
 ) {
     Scaffold(
         topBar = {
