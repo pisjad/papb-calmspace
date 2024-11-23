@@ -20,7 +20,7 @@ fun homeNavigation() {
                     navController.navigate("dashboard/$username")
                 },
                 onBackToOnboarding = {
-                    navController.navigate("onboarding") // Navigate back to onboarding
+                    navController.navigate("OnboardingScreen") // Navigate back to onboarding
                 }
             )
         }
