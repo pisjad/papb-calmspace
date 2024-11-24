@@ -7,16 +7,21 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -30,7 +35,6 @@ import com.chrisp.calmspace.ui.theme.Purple80
 @Composable
 fun ForumAddScreen(navController: NavController) {
     val viewModel: ForumAddViewModel = viewModel()
-
     val context = LocalContext.current
 
     LaunchedEffect(key1 = viewModel.isSuccess.value){
@@ -70,18 +74,43 @@ fun ForumAddScreen(navController: NavController) {
                     tint = Color.White
                 )
             }
-
         }
 
         // TextField untuk berbagi cerita
+        val isFocused = remember { mutableStateOf(false) }
         val textState = remember { androidx.compose.runtime.mutableStateOf("") }
         TextField(
             value = textState.value,
             onValueChange = { textState.value = it },
-            placeholder = { Text("Bagikan cerita kamu!",  color= Color.White) },
+            placeholder = {
+                if (!isFocused.value) { // Placeholder hanya muncul jika tidak fokus
+                    Text("Bagikan cerita kamu!", color = Color.White, fontSize = 18.sp)
+                }
+            },
+            textStyle = LocalTextStyle.current.copy(
+                color = Color.White,
+                fontSize = 20.sp
+            ),
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f)
+                .onFocusChanged { focusState ->
+                    isFocused.value = focusState.isFocused // Update state fokus
+                },
+            colors = TextFieldDefaults.textFieldColors(
+                textColor = Color.White, // Warna teks
+                backgroundColor = Color.Transparent, // Latar belakang transparan
+                focusedIndicatorColor = Color.White, // Garis bawah saat fokus
+                unfocusedIndicatorColor = Color.Gray // Garis bawah saat tidak fokus
+            ),
+            keyboardOptions = KeyboardOptions.Default.copy(
+                imeAction = ImeAction.Done
+            ),
+            keyboardActions = KeyboardActions(
+                onDone = {
+                    // Tambahkan tindakan selesai (opsional)
+                }
+            )
         )
 
         // Tombol Kirim
