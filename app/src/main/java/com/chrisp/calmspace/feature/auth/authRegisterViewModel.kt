@@ -1,54 +1,45 @@
 package com.chrisp.calmspace.feature.auth
 
+import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import com.chrisp.calmspace.feature.data.Repository
+import com.chrisp.calmspace.model.UserModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.UserProfileChangeRequest
 
 class RegisterViewModel : ViewModel() {
-    private val auth: FirebaseAuth = FirebaseAuth.getInstance()
+    val authRepository = Repository()
 
-    // State variables for registration
-    var currentUser = mutableStateOf<FirebaseUser?>(null)
-    var errorMessage = mutableStateOf<String?>(null)
-    var isLoading = mutableStateOf(false)
+    val isLoading = mutableStateOf(false)
+    val isSuccess = mutableStateOf(false)
 
-    // Handle registration process
-    fun register(
-        fullName: String,
-        email: String,
-        password: String,
-        onRegisterResult: (Boolean, String?) -> Unit
-    ) {
+    val errMsg = mutableStateOf("")
+
+    fun signUp(
+        email : String,
+        password : String,
+        name : String,
+        no_telp : String,
+    ){
         isLoading.value = true
-
-        auth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener { task ->
+        isSuccess.value = false
+        authRepository.signUp(
+            email,
+            password,
+            name,
+            no_telp,
+            onSuccess = {
+                isSuccess.value = true
                 isLoading.value = false
-
-                if (task.isSuccessful) {
-                    val user = auth.currentUser
-
-                    // Update user profile with full name
-                    val profileUpdates = UserProfileChangeRequest.Builder()
-                        .setDisplayName(fullName)
-                        .build()
-
-                    user?.updateProfile(profileUpdates)
-                        ?.addOnCompleteListener { profileTask ->
-                            if (profileTask.isSuccessful) {
-                                currentUser.value = user
-                                onRegisterResult(true, null) // Registration successful
-                            } else {
-                                errorMessage.value = profileTask.exception?.message
-                                onRegisterResult(false, errorMessage.value) // Profile update failed
-                            }
-                        }
-                } else {
-                    errorMessage.value = task.exception?.message
-                    onRegisterResult(false, errorMessage.value) // Registration failed
-                }
+                Log.e("Berhasil", "Sign Up Berhasil")
+            },
+            onFailed = {
+                isLoading.value = false
+                isSuccess.value = false
+                errMsg.value = it.toString()
             }
+        )
     }
 }

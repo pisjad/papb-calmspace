@@ -25,32 +25,39 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.chrisp.calmspace.ui.theme.Purple100
 import com.chrisp.calmspace.ui.theme.White100
-import androidx.compose.material.ButtonDefaults
 import com.chrisp.calmspace.ui.theme.ChevronLeft
 import com.chrisp.calmspace.ui.theme.White40
 import androidx.compose.runtime.*
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import com.chrisp.calmspace.navigation.Screen
+import kotlinx.coroutines.delay
 
 @Composable
 fun LoginScreen(
-    onLoginSuccess: (String) -> Unit,
-    onBackToOnboarding: () -> Unit, // New parameter for back navigation
-    viewModel: AuthViewModel = viewModel()
+    navController: NavController
 ) {
+    val viewModel: AuthViewModel = viewModel()
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    val currentUser by remember { viewModel.currentUser }
-    val errorMessage by remember { viewModel.errorMessage }
     var isLoading by remember { mutableStateOf(false) }
 
-    // Check if the user is logged in (in case of a session restore)
-    LaunchedEffect(currentUser) {
-        if (currentUser != null) {
-            // If logged in, pass the username to the next screen
-            onLoginSuccess(currentUser?.email ?: "User")
+    LaunchedEffect(viewModel.errMsg.value) {
+        if (viewModel.errMsg.value.isNotEmpty()) {
+            delay(3000)
+            viewModel.errMsg.value = ""
         }
     }
 
+    LaunchedEffect(key1 = viewModel.isLogin.value){
+        if(viewModel.isLogin.value){
+            navController.navigate(Screen.Home.route) {
+                popUpTo(Screen.Login.route) {
+                    inclusive = true
+                }
+            }
+        }
+    }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -60,8 +67,11 @@ fun LoginScreen(
     ) {
         IconButton(
             onClick = {
-                // Call the back navigation callback when clicked
-                onBackToOnboarding()
+                navController.navigate(Screen.Onboarding.route) {
+                    popUpTo(Screen.Login.route) {
+                        inclusive = true
+                    }
+                }
             },
             modifier = Modifier
                 .size(40.dp)
@@ -147,7 +157,7 @@ fun LoginScreen(
         )
 
         // Show error message if exists
-        errorMessage?.let {
+        viewModel.errMsg.value.let {
             Text(
                 text = it,
                 color = MaterialTheme.colorScheme.error,
@@ -157,26 +167,31 @@ fun LoginScreen(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Login Button (show loading spinner when clicked)
-        Button(
-            onClick = {
-                viewModel.login(email, password) { success, error ->
-                    if (success) {
-                        onLoginSuccess(email)  // Navigate to the next screen on successful login
-                    } else {
-                        viewModel.errorMessage.value = error
+        if (viewModel.isLoading.value){
+            Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center){
+                CircularProgressIndicator()
+            }
+        }else {
+            Button(
+                onClick = {
+                    if(email == "" || password == ""){
+                        viewModel.errMsg.value = "Harap isi semua kolom"
+                    }else{
+                        viewModel.signIn(
+                            email, password
+                        )
                     }
-                }
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(48.dp)
-                .padding(start = 10.dp, end = 10.dp),
-            shape = MaterialTheme.shapes.medium, // Rounded corners
-            elevation = ButtonDefaults.elevation(defaultElevation = 4.dp),
-            colors = ButtonDefaults.buttonColors(backgroundColor = Purple100)
-        ) {
-            Text(text = "Login", color = Color.White) // Set text color to white for contrast
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(48.dp)
+                    .padding(start = 10.dp, end = 10.dp),
+                shape = MaterialTheme.shapes.medium, // Rounded corners
+                elevation = ButtonDefaults.elevation(defaultElevation = 4.dp),
+                colors = ButtonDefaults.buttonColors(backgroundColor = Purple100)
+            ) {
+                Text(text = "Login", color = Color.White) // Set text color to white for contrast
+            }
         }
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -215,17 +230,15 @@ fun LoginScreen(
             Text(text = "Belum memiliki akun? ")
             Text(
                 text = "Register",
-                modifier = Modifier.clickable { /* Handle Register Navigation */ }
+                modifier = Modifier.clickable {
+                    navController.navigate(Screen.Register.route) {
+                        popUpTo(Screen.Login.route) {
+                            inclusive = true
+                        }
+                    }
+                }
             )
         }
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun PreviewLoginScreen() {
-    LoginScreen(
-        onLoginSuccess = {},
-        onBackToOnboarding = {} // Provide an empty lambda for preview
-    )
-}

@@ -25,6 +25,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.*
 import com.chrisp.calmspace.feature.artikel.ArticleViewModel
+import com.chrisp.calmspace.feature.auth.HomeViewModel
 import com.chrisp.calmspace.feature.auth.LoginScreen
 import com.chrisp.calmspace.navigation.BottomNavigationBar
 import com.chrisp.calmspace.navigation.Screen
@@ -32,15 +33,9 @@ import com.chrisp.calmspace.ui.theme.Purple80
 
 @Composable
 fun DashboardScreen(
-//    username: String,
     navController: NavController,
-//    onNavigateToArticle: () -> Unit = {
-//        navController.navigate(ArticleDestination.ArticleList.route)
-//    }
-
-
 ) {
-//    viewModel: ArticleViewModel = viewModel()
+    val viewModel: HomeViewModel = viewModel()
 
     Scaffold(
         bottomBar = {
@@ -67,7 +62,7 @@ fun DashboardScreen(
                             text = buildAnnotatedString {
                                 append("Halo, ")
                                 withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                                    append("Sajjad")
+                                    append(viewModel.user.value?.name ?: "")
                                 }
                                 append("!")
                             },

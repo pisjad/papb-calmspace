@@ -9,8 +9,7 @@ import com.chrisp.calmspace.model.ForumModel
 import com.google.firebase.firestore.FirebaseFirestore
 
 class ForumViewModel: ViewModel() {
-    private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
-    val repository = Repository(firestore)
+    val repository = Repository()
     val posts = mutableStateListOf<ForumModel?>(null)
 
   init{

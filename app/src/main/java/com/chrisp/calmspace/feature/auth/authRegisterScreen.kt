@@ -22,21 +22,40 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import com.chrisp.calmspace.navigation.Screen
 import com.chrisp.calmspace.ui.theme.ChevronLeft
 import com.chrisp.calmspace.ui.theme.Purple100
+import kotlinx.coroutines.delay
 
 @Composable
 fun RegistrationScreen(
-    onRegisterComplete: () -> Unit,
-    onNavigateBack: () -> Unit, // New parameter for back navigation
-    viewModel: RegisterViewModel = RegisterViewModel()
+    navController: NavController
 ) {
+    val viewModel: RegisterViewModel = viewModel()
+
     var fullName by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var phoneNumber by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    val isLoading = viewModel.isLoading.value
-    val errorMessage = viewModel.errorMessage.value
+
+    LaunchedEffect(viewModel.errMsg.value) {
+        if (viewModel.errMsg.value.isNotEmpty()) {
+            delay(3000)
+            viewModel.errMsg.value = ""
+        }
+    }
+
+    LaunchedEffect(key1 = viewModel.isSuccess.value){
+        if (viewModel.isSuccess.value) {
+            navController.navigate(Screen.Login.route) {
+                popUpTo(Screen.Register.route) {
+                    inclusive = true
+                }
+            }
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -44,7 +63,13 @@ fun RegistrationScreen(
             .padding(horizontal = 16.dp, vertical = 80.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        IconButton(onClick = { onNavigateBack() }, // Navigate back to onboarding
+        IconButton(onClick = {
+            navController.navigate(Screen.Onboarding.route) {
+                popUpTo(Screen.Register.route) {
+                    inclusive = true
+                }
+            }
+        }, // Navigate back to onboarding
             modifier = Modifier
                 .size(40.dp)
                 .align(Alignment.Start)
@@ -158,90 +183,74 @@ fun RegistrationScreen(
                 .background(Color(0xFFF5F5F5)),
         )
         Spacer(modifier = Modifier.height(24.dp))
-
-        // Register Button
-        Button(
-            onClick = {
-                viewModel.register(
-                    fullName = fullName,
-                    email = email,
-                    password = password
-                ) { success, message ->
-                    if (success) {
-                        onRegisterComplete()
-                    } else {
-                        // Handle registration error
-                        message?.let { Log.e("Registration", it) }
+        if (viewModel.isLoading.value){
+            Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center){
+                CircularProgressIndicator()
+            }
+        }else {
+            Button(
+                onClick = {
+                    if(email == "" || password == "" || fullName == "" || phoneNumber == ""){
+                        viewModel.errMsg.value = "Harap isi semua kolom"
+                    }else{
+                        viewModel.signUp(email, password, fullName, phoneNumber)
                     }
-                }
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(48.dp)
-                .padding(start = 10.dp, end = 10.dp),
-            enabled = !isLoading,
-            colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF3A285F))
-        ) {
-            Text(text = if (isLoading) "Loading..." else "Daftar", color = Color.White)
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(48.dp)
+                    .padding(start = 10.dp, end = 10.dp),
+                colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF3A285F))
+            ) {
+                Text(text = "Daftar", color = Color.White)
+            }
         }
 
-        // Show error message if available
-        if (errorMessage != null) {
-            Text(
-                text = errorMessage,
-                color = Color.Red,
-                modifier = Modifier.padding(top = 8.dp)
-            )
-        }
-    }
-    Spacer(modifier = Modifier.height(16.dp))
-
-    // Or Divider
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 10.dp)
-    ) {
-        Divider(modifier = Modifier.weight(1f))
         Text(
-            text = "Atau",
-            modifier = Modifier.padding(horizontal = 8.dp),
-            color = Color.Gray
+            text = viewModel.errMsg.value,
+            color = Color.Red,
+            modifier = Modifier.padding(top = 8.dp)
         )
-        Divider(modifier = Modifier.weight(1f))
     }
-    Spacer(modifier = Modifier.height(16.dp))
+//    Spacer(modifier = Modifier.height(16.dp))
+//
+//    // Or Divider
+//    Row(
+//        verticalAlignment = Alignment.CenterVertically,
+//        modifier = Modifier
+//            .fillMaxWidth()
+//            .padding(horizontal = 10.dp)
+//    ) {
+//        Divider(modifier = Modifier.weight(1f))
+//        Text(
+//            text = "Atau",
+//            modifier = Modifier.padding(horizontal = 8.dp),
+//            color = Color.Gray
+//        )
+//        Divider(modifier = Modifier.weight(1f))
+//    }
+//    Spacer(modifier = Modifier.height(16.dp))
 
     // Google Sign-Up Button
-    OutlinedButton(
-        onClick = { /* Handle Google Sign-Up */ },
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(48.dp)
-            .padding(start = 10.dp, end = 10.dp),
-        colors = ButtonDefaults.outlinedButtonColors(backgroundColor = Color(0xFFF5F5F5)) ,
-        elevation = ButtonDefaults.elevation(defaultElevation = 4.dp)
-    ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            // Uncomment and set the Google icon if available
-//            Icon(
-//                painter = painterResource(id = R.drawable.google),
-//                contentDescription = "Google Icon",
-//                modifier = Modifier.size(24.dp)
-//            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(text = "Daftar dengan Google", color = Color.Black)
-        }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewRegistrationScreen() {
-    RegistrationScreen(
-        onRegisterComplete = { /* Handle registration complete */ },
-        onNavigateBack = { /* Handle back navigation */ } // Provide an empty lambda for preview
-    )
+//    OutlinedButton(
+//        onClick = { /* Handle Google Sign-Up */ },
+//        modifier = Modifier
+//            .fillMaxWidth()
+//            .height(48.dp)
+//            .padding(start = 10.dp, end = 10.dp),
+//        colors = ButtonDefaults.outlinedButtonColors(backgroundColor = Color(0xFFF5F5F5)) ,
+//        elevation = ButtonDefaults.elevation(defaultElevation = 4.dp)
+//    ) {
+//        Row(verticalAlignment = Alignment.CenterVertically) {
+//            // Uncomment and set the Google icon if available
+////            Icon(
+////                painter = painterResource(id = R.drawable.google),
+////                contentDescription = "Google Icon",
+////                modifier = Modifier.size(24.dp)
+////            )
+//            Spacer(modifier = Modifier.width(8.dp))
+//            Text(text = "Daftar dengan Google", color = Color.Black)
+//        }
+//    }
 }
 

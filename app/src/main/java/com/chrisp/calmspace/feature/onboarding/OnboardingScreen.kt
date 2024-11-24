@@ -20,15 +20,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import com.chrisp.calmspace.navigation.Screen
 import com.chrisp.calmspace.ui.theme.Purple100
 import com.chrisp.calmspace.ui.theme.Purple60
 import com.chrisp.calmspace.ui.theme.White20
 
 @Composable
 fun OnboardingScreen(
-    onFinish: () -> Unit,
-    viewModel: OnboardingViewModel = viewModel()
+    navController: NavController
 ) {
+    val viewModel: OnboardingViewModel = viewModel()
     val currentIndex by viewModel.currentIndex
     val onboardingItem = viewModel.onboardingItems[currentIndex]
 
@@ -71,7 +73,11 @@ fun OnboardingScreen(
                 Button(
                     onClick = {
                         if (currentIndex == viewModel.onboardingItems.size - 1) {
-                            onFinish()
+                                navController.navigate(Screen.Login.route) {
+                                    popUpTo(Screen.Onboarding.route) {
+                                        inclusive = true
+                                    }
+                                }
                         } else {
                             viewModel.nextScreen()
                         }
@@ -86,20 +92,20 @@ fun OnboardingScreen(
                     )
                 ) {
                     Text(
-                        if (currentIndex == viewModel.onboardingItems.size - 1) "Masuk ke CalmSpace" else "Selanjutnya",
+                        if (currentIndex == viewModel.onboardingItems.size - 1) "Masuk" else "Selanjutnya",
                         fontSize = 16.sp,
                     )
                 }
                 if (currentIndex == viewModel.onboardingItems.size - 1) {
                     // Add additional text below the button for the last onboarding screen
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Text(
-                        text = "Kami siap membantu Anda mencapai ketenangan.",
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Normal,
-                        color = White20,
-                        textAlign = TextAlign.Center
-                    )
+//                    Spacer(modifier = Modifier.height(16.dp))
+//                    Text(
+//                        text = "Kami siap membantu Anda mencapai ketenangan.",
+//                        fontSize = 14.sp,
+//                        fontWeight = FontWeight.Normal,
+//                        color = White20,
+//                        textAlign = TextAlign.Center
+//                    )
                 }
                 if (currentIndex > 0) {
                     Button(
@@ -122,9 +128,9 @@ fun OnboardingScreen(
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun PreviewOnboardingScreen() {
-    OnboardingScreen(onFinish = { /* Handle finish action */ })
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun PreviewOnboardingScreen() {
+//    OnboardingScreen(onFinish = { /* Handle finish action */ })
+//}
 

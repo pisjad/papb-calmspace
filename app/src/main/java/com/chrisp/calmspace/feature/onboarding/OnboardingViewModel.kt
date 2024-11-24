@@ -1,10 +1,14 @@
 package com.chrisp.calmspace.feature.onboarding
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.State
 import com.chrisp.calmspace.R
+import com.chrisp.calmspace.feature.data.Repository
 import com.chrisp.calmspace.model.OnboardingModel
+import com.chrisp.calmspace.model.UserModel
+import com.google.firebase.auth.FirebaseAuth
 
 class OnboardingViewModel : ViewModel() {
     private val _currentIndex = mutableStateOf(0)
