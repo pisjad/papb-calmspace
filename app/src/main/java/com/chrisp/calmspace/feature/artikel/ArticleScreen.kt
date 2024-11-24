@@ -22,8 +22,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.chrisp.calmspace.R
 import com.chrisp.calmspace.model.ArticleModel
 import com.chrisp.calmspace.navigation.BottomNavigationBar
+import com.chrisp.calmspace.navigation.Screen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -102,7 +104,13 @@ fun ArticleScreen(
                     items(articles) { article ->
                         ArticleCard(
                             article = article,
-                            onArticleClick = {  }
+                            onArticleClick = {
+                                navController.navigate("${Screen.ArticleDetail.route}/${article.id}") {
+                                    popUpTo(Screen.Article.route) {
+                                        inclusive = true
+                                    }
+                                }
+                            }
                         )
                     }
                 }
@@ -116,11 +124,11 @@ fun ArticleScreen(
 @Composable
 fun ArticleCard(
     article: ArticleModel,
-    onArticleClick: (ArticleModel) -> Unit,
+    onArticleClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Card(
-        onClick = { onArticleClick(article) },
+        onClick = { onArticleClick() },
         modifier = modifier
             .fillMaxWidth()
             .height(100.dp),
@@ -136,7 +144,7 @@ fun ArticleCard(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
-                painter = painterResource(id = article.image),
+                painter = painterResource(id = R.drawable.img_ocpd),
                 contentDescription = null,
                 modifier = Modifier
                     .size(76.dp)

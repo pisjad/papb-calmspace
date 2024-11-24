@@ -3,8 +3,7 @@
 package com.chrisp.calmspace.model
 
 data class ArticleModel(
-    val id: Int,
-    val image: Int,         // Resource ID untuk gambar
+    val id: String,
     val title: String,      // Judul artikel
     val content: String,    // Konten artikel
     val category: String,   // Kategori (misal: "Artikel" atau "Video")

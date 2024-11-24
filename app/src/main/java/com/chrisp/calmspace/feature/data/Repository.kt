@@ -1,5 +1,6 @@
 package com.chrisp.calmspace.feature.data
 
+import com.chrisp.calmspace.model.ArticleModel
 import com.chrisp.calmspace.model.ForumModel
 import com.chrisp.calmspace.model.UserModel
 import com.google.firebase.auth.FirebaseAuth
@@ -100,6 +101,107 @@ class Repository{
                             isi = document?.getString("isi") ?: ""
                         )
                     })
+                    return@addSnapshotListener
+                }
+            }
+    }
+
+    fun getAllArticle(
+        onSuccess: (List<ArticleModel>) -> Unit,
+        onFailure: (Exception) -> Unit
+    ){
+        firestore.collection("article")
+            .addSnapshotListener { snapshot, exception ->
+                if (exception != null) {
+                    onFailure(exception)
+                    return@addSnapshotListener
+                }
+                snapshot?.let {
+                    onSuccess(it.documents.mapNotNull { document ->
+                        ArticleModel(
+                            id = document?.getString("id") ?: "",
+                            title = document?.getString("title") ?: "",
+                            content = document?.getString("content") ?: "",
+                            category = document?.getString("category") ?: "",
+                            date = document?.getString("date") ?: "",
+                            author = document?.getString("author") ?: ""
+                        )
+                    })
+                    return@addSnapshotListener
+                }
+            }
+    }
+
+    fun getArticleById(
+        id: String,
+        onSuccess: (ArticleModel) -> Unit,
+        onFailed: (Exception) -> Unit
+    ) {
+        firestore
+            .collection("article")
+            .document(id)
+            .addSnapshotListener { value, error ->
+                if (error != null) {
+                    onFailed(error)
+                }
+                value?.let { document ->
+                    onSuccess(
+                        ArticleModel(
+                            id = document.getString("id") ?: "",
+                            title = document.getString("title") ?: "",
+                            content = document.getString("content") ?: "",
+                            category = document.getString("category") ?: "",
+                            date = document.getString("date") ?: "",
+                            author = document.getString("author") ?: "",
+                        )
+                    )
+                    return@addSnapshotListener
+                }
+            }
+    }
+
+    fun addForum(
+        isi: String,
+        onSuccess: () -> Unit,
+        onFailure: (Exception) -> Unit
+    ) {
+        val forumId = firestore.collection("forum").document().id
+        val forumData = mapOf(
+            "id" to forumId,
+            "isi" to isi
+        )
+
+        firestore.collection("forum")
+            .document(forumId)
+            .set(forumData)
+            .addOnSuccessListener {
+                onSuccess()
+            }
+            .addOnFailureListener { exception ->
+                onFailure(exception)
+            }
+    }
+
+
+    fun getForumById(
+        id: String,
+        onSuccess: (ForumModel) -> Unit,
+        onFailed: (Exception) -> Unit
+    ) {
+        firestore
+            .collection("forum")
+            .document(id)
+            .addSnapshotListener { value, error ->
+                if (error != null) {
+                    onFailed(error)
+                }
+                value?.let { document ->
+                    onSuccess(
+                        ForumModel(
+                            id = document.getString("id") ?: "",
+                            isi = document.getString("isi") ?: "",
+                        )
+                    )
                     return@addSnapshotListener
                 }
             }

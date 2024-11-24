@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.material.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
@@ -37,15 +38,23 @@ fun DashboardScreen(
 ) {
     val viewModel: HomeViewModel = viewModel()
 
+
     Scaffold(
         bottomBar = {
             BottomNavigationBar(navController)
         },
+
         topBar = {
             TopAppBar(
+
                 title = {
+
                     Row(
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .padding(top= 30.dp)
+
+
                     ) {
                         // Profile Photo Placeholder
                         Box(
@@ -80,67 +89,61 @@ fun DashboardScreen(
                     }
                 },
                 backgroundColor = Purple80,
-                modifier = Modifier.height(100.dp),
+                modifier = Modifier.height(130.dp),
             )
         },
     ) { innerPadding ->
-        Column(
+        LazyColumn(
             modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize()
                 .padding(16.dp)
         ) {
-            CustomButtons(navController)
-            Spacer(modifier = Modifier.height(6.dp))
-            Text("Jadwal Konsultasimu", style = MaterialTheme.typography.h6)
+            item {
+                CustomButtons(navController)
+                Spacer(modifier = Modifier.height(6.dp))
+                Text("Jadwal Konsultasimu", style = MaterialTheme.typography.h6)
 
-            Spacer(modifier = Modifier.height(6.dp))
-            ConsultationCard()
+                Spacer(modifier = Modifier.height(6.dp))
+                ConsultationCard()
 
-            Spacer(modifier = Modifier.height(16.dp))
-            Text("Konsultasi Darurat", style = MaterialTheme.typography.h6)
-            Spacer(modifier = Modifier.height(6.dp))
-            ConsultationNowCard()
+                Spacer(modifier = Modifier.height(16.dp))
+                Text("Konsultasi Darurat", style = MaterialTheme.typography.h6)
+                Spacer(modifier = Modifier.height(6.dp))
+                ConsultationNowCard()
 
-            // Artikel section with clickable modifier
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(
-                text = "Artikel",
-                style = MaterialTheme.typography.h6,
-                modifier = Modifier
-                    .clickable {
-                        navController.navigate(Screen.Article.route) {
-                            popUpTo(Screen.Home.route) {
-                                inclusive = true
+                // Artikel section with clickable modifier
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    text = "Artikel",
+                    style = MaterialTheme.typography.h6,
+                    modifier = Modifier
+                        .clickable {
+                            navController.navigate(Screen.Article.route) {
+                                popUpTo(Screen.Home.route) {
+                                    inclusive = true
+                                }
                             }
                         }
-                    }
-                    .padding(vertical = 8.dp)
-            )
-
-//            LazyColumn {
-//                items(viewModel.filteredArticles) { article ->
-//                    ArticleCard(
-//                        title = article.title,
-//                        date = article.date,
-//                        onClick = {
-//                            navController.navigate(
-//                                ArticleDestination.ArticleDetail.createRoute(article.id)
-//                            )
-//                        }
-//                    )
-//                }
-//            }
+                        .padding(vertical = 8.dp)
+                )
+            }
 
 
-            Spacer(modifier = Modifier.height(16.dp))
-            Text("More personalized content and options can go here.")
+                items(viewModel.articles) { article ->
+                    ArticleCard(
+                        title = article?.title ?: "",
+                        date = article?.date ?: "",
+                        onClick = {
+                            navController.navigate("${Screen.ArticleDetail.route}/${article?.id ?: ""}") {
+                                popUpTo(Screen.Article.route) {
+                                    inclusive = true
+                                }
+                            }
+                        }
+                    )
+                }
+
         }
     }
 }
-
-//@Preview(showBackground = true)
-//@Composable
-//fun DefaultPreview() {
-//    DashboardScreen(username = "Qyan", navController = rememberNavController())
-//}
