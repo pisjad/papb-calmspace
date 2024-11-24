@@ -27,6 +27,7 @@ class Repository{
                             uid = it.user?.uid ?: "",
                             name = name,
                             no_telp = no_telp,
+                            email = it.user?.email ?: "",
                         )
                     )
                     .addOnSuccessListener {
@@ -73,6 +74,7 @@ class Repository{
                         UserModel(
                             uid = auth.uid ?: "",
                             name = doc["name"] as String,
+                            email = auth.currentUser?.email ?: "",
                             no_telp = doc["no_telp"] as String,
                         )
                     )
@@ -102,4 +104,14 @@ class Repository{
                 }
             }
     }
+
+    fun logout(onSuccess: () -> Unit, onFailed: (Exception) -> Unit) {
+        try {
+            auth.signOut()
+            onSuccess()
+        } catch (e: Exception) {
+            onFailed(e)
+        }
+    }
+
 }

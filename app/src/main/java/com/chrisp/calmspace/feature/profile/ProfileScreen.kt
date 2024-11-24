@@ -1,5 +1,6 @@
 package com.chrisp.calmspace.feature.profile
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -19,95 +20,116 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.compose.rememberImagePainter
 import com.chrisp.calmspace.R
+import com.chrisp.calmspace.navigation.BottomNavigationBar
+import com.chrisp.calmspace.navigation.NavViewModel
+import com.chrisp.calmspace.navigation.Screen
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun ProfileScreen(viewModel: ProfileViewModel = viewModel()) {
-    val profile by viewModel.profileState.collectAsState()
+fun ProfileScreen(navController: NavController) {
+    val viewModel: ProfileViewModel = viewModel()
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colors.background),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        TopAppBar(
-            backgroundColor = Color(0xFF7E57C2),
-            contentColor = Color.White,
+    Scaffold(
+        bottomBar = {
+            BottomNavigationBar(navController)
+        }
+    ) { paddingValues ->
+        Column(
+            modifier = Modifier
+                .padding(paddingValues)
+                .fillMaxSize()
+                .background(MaterialTheme.colors.background),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                contentAlignment = Alignment.Center
+            TopAppBar(
+                backgroundColor = Color(0xFF7E57C2),
+                contentColor = Color.White,
             ) {
-                Text(
-                    text = "Profil",
-                    style = TextStyle(fontWeight = FontWeight.Bold, fontSize = 20.sp),
-                    color = Color.White
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "Profil",
+                        style = TextStyle(fontWeight = FontWeight.Bold, fontSize = 20.sp),
+                        color = Color.White
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            // Profile Picture
+            Box(contentAlignment = Alignment.BottomEnd) {
+//            AsyncImage(
+//                model = profile.profilePictureUrl,
+//                contentDescription = "Profile Picture",
+//                modifier = Modifier
+//                    .size(100.dp)
+//                    .clip(CircleShape)
+//            )
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_camera), // Replace with your icon resource
+                    contentDescription = "Edit Profile Picture",
+                    tint = Color.White,
+                    modifier = Modifier
+                        .size(24.dp)
+                        .background(Color(0xFF7E57C2), CircleShape)
+                        .clickable { /* Handle picture update */ }
                 )
             }
-        }
 
-        Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-        // Profile Picture
-        Box(contentAlignment = Alignment.BottomEnd) {
-            AsyncImage(
-                model = profile.profilePictureUrl,
-                contentDescription = "Profile Picture",
-                modifier = Modifier
-                    .size(100.dp)
-                    .clip(CircleShape)
+            // Name and Email
+            Text(
+                text = viewModel.user.value?.name ?: "",
+                style = TextStyle(fontWeight = FontWeight.Bold, fontSize = 20.sp)
             )
-            Icon(
-                painter = painterResource(id = R.drawable.ic_camera), // Replace with your icon resource
-                contentDescription = "Edit Profile Picture",
-                tint = Color.White,
-                modifier = Modifier
-                    .size(24.dp)
-                    .background(Color(0xFF7E57C2), CircleShape)
-                    .clickable { /* Handle picture update */ }
+            Text(
+                text = viewModel.user.value?.email ?: "",
+                style = TextStyle(fontSize = 16.sp, color = Color.Gray)
             )
-        }
 
-        Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(24.dp))
 
-        // Name and Email
-        Text(
-            text = profile.name,
-            style = TextStyle(fontWeight = FontWeight.Bold, fontSize = 20.sp)
-        )
-        Text(
-            text = profile.email,
-            style = TextStyle(fontSize = 16.sp, color = Color.Gray)
-        )
+            // Options
+            OptionItem(icon = R.drawable.ic_calendar, text = "Riwayat Konsultasi") {
+                /* Navigate to consultation history */
+            }
+            OptionItem(icon = R.drawable.ic_lock, text = "Reset Password") {
+                /* Navigate to reset password */
+            }
 
-        Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.weight(1f))
 
-        // Options
-        OptionItem(icon = R.drawable.ic_calendar, text = "Riwayat Konsultasi") {
-            /* Navigate to consultation history */
-        }
-        OptionItem(icon = R.drawable.ic_lock, text = "Reset Password") {
-            /* Navigate to reset password */
-        }
-
-        Spacer(modifier = Modifier.weight(1f))
-
-        // Logout Button
-        Button(
-            onClick = { /* Handle logout */ },
-            colors = ButtonDefaults.buttonColors(backgroundColor = Color.Red),
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth()
-                .height(48.dp)
-        ) {
-            Text(text = "Keluar", color = Color.White)
+            // Logout Button
+            Button(
+                onClick = {
+                    viewModel.logout(onSuccess = {
+                        navController.navigate(Screen.Login.route) {
+                            popUpTo(Screen.Home.route) { inclusive = true }
+                        }
+                    }, onFailed = {
+                        // Handle logout failure
+                    })
+                },
+                colors = ButtonDefaults.buttonColors(backgroundColor = Color.Red),
+                modifier = Modifier
+                    .padding(16.dp)
+                    .fillMaxWidth()
+                    .height(48.dp)
+            ) {
+                Text(text = "Keluar", color = Color.White)
+            }
         }
     }
+
 }
 
 @Composable
@@ -128,10 +150,4 @@ fun OptionItem(icon: Int, text: String, onClick: () -> Unit) {
         Spacer(modifier = Modifier.width(16.dp))
         Text(text = text, fontSize = 16.sp, color = Color.Black)
     }
-}
-
-@Preview
-@Composable
-private fun profileprev() {
-    ProfileScreen()
 }

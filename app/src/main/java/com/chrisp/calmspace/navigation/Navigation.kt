@@ -13,6 +13,7 @@ import com.chrisp.calmspace.feature.forum.ForumScreen
 import com.chrisp.calmspace.feature.home.DashboardScreen
 import com.chrisp.calmspace.feature.konsultasi.KonsultasiScreen
 import com.chrisp.calmspace.feature.onboarding.OnboardingScreen
+import com.chrisp.calmspace.feature.profile.ProfileScreen
 
 @Composable
 fun Navigation() {
@@ -47,6 +48,10 @@ fun Navigation() {
 
         composable(route = Screen.Forum.route) {
             ForumScreen(navController = navController)
+        }
+
+        composable(route = Screen.Profile.route) {
+            ProfileScreen(navController = navController)
         }
     }
 }
