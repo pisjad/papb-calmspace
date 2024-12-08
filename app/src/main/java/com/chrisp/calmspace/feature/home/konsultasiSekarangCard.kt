@@ -15,8 +15,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.chrisp.calmspace.ui.theme.Purple40
 import com.chrisp.calmspace.ui.theme.Purple60
-import com.chrisp.calmspace.ui.theme.Purple80
-import com.chrisp.calmspace.ui.theme.White100
 
 @Composable
 fun ConsultationNowCard() {

@@ -1,7 +1,9 @@
 package com.chrisp.calmspace.feature.data
 
 import com.chrisp.calmspace.model.ArticleModel
+import com.chrisp.calmspace.model.DoctorModel
 import com.chrisp.calmspace.model.ForumModel
+import com.chrisp.calmspace.model.ScheduledConsultation
 import com.chrisp.calmspace.model.UserModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -130,6 +132,36 @@ class Repository{
                     return@addSnapshotListener
                 }
             }
+    }
+
+    fun getAllDoctor(
+        onSuccess: (List<DoctorModel>) -> Unit,
+        onFailure: (Exception) -> Unit
+    ){
+        firestore.collection("doctor")
+            .addSnapshotListener { snapshot, exception ->
+                if (exception != null) {
+                    onFailure(exception)
+                    return@addSnapshotListener
+                }
+                snapshot?.let {
+                    onSuccess(it.documents.mapNotNull { document ->
+                        DoctorModel(
+                            id = document?.getString("id") ?: "",
+                            name = document?.getString("name") ?: "",
+                            date = document?.getString("date") ?: "",
+                        )
+                    })
+                    return@addSnapshotListener
+                }
+            }
+    }
+
+    fun addConsultation(consultation: ScheduledConsultation, onSuccess: () -> Unit, onFailure: (Exception) -> Unit) {
+        firestore.collection("consultations")
+            .add(consultation)
+            .addOnSuccessListener { onSuccess() }
+            .addOnFailureListener { onFailure(it) }
     }
 
     fun getArticleById(

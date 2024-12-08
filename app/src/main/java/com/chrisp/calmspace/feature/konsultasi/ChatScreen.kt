@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.chrisp.calmspace.ui.theme.Purple100
 import com.chrisp.calmspace.ui.theme.Purple40
@@ -39,9 +40,12 @@ enum class MessageStatus {
     SENT, DELIVERED, READ
 }
 
+
+
 class ChatViewModel : ViewModel() {
     private val _messages = mutableStateListOf<Message>()
     val messages: List<Message> = _messages
+
 
     fun sendMessage(content: String, senderId: String) {
         val message = Message(
@@ -54,20 +58,23 @@ class ChatViewModel : ViewModel() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ChatScreen(
-    modifier: Modifier = Modifier,
-    chatViewModel: ChatViewModel = viewModel(),
-    doctorViewModel: DoctorViewModel = viewModel()
-) {
+fun ChatScreen(navController: NavController) {
+    // Retrieve the arguments passed to the screen
+    val doctorName = navController.currentBackStackEntry
+        ?.arguments?.getString("doctorName") ?: "Doctor"
+    val consultationDate = navController.currentBackStackEntry
+        ?.arguments?.getString("consultationDate") ?: "Date"
+
+    val chatViewModel: ChatViewModel = viewModel()
     var messageText by remember { mutableStateOf("") }
     val messages = remember { mutableStateListOf<Message>() }
-    val doctorSchedule by doctorViewModel.doctorSchedule
 
     Column(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxSize()
             .background(Color(0xFFECE5DD))
     ) {
+        // Top App Bar with Doctor's Name and Consultation Date
         TopAppBar(
             colors = TopAppBarDefaults.topAppBarColors(
                 containerColor = Color(0xFF075E54)
@@ -76,31 +83,25 @@ fun ChatScreen(
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
+                    // Doctor's avatar or icon (if needed)
                     Surface(
                         modifier = Modifier.size(40.dp),
                         shape = CircleShape
                     ) {
-//                        AsyncImage(
-//                            model = doctorSchedule.imageUrl,
-//                            contentDescription = "Profile picture",
-//                            modifier = Modifier
-//                                .size(40.dp)
-//                                .background(Color.Gray.copy(alpha = 0.2f), CircleShape),
-//                            placeholder = painterResource(id = R.drawable.default_profile),
-//                            error = painterResource(id = R.drawable.default_profile)
-//                        )
+                        // Placeholder for doctor's avatar
                     }
 
                     Spacer(modifier = Modifier.width(12.dp))
 
+                    // Doctor's name and consultation date
                     Column {
                         Text(
-                            text = doctorSchedule.name,
+                            text = doctorName,
                             color = Color.White,
                             style = MaterialTheme.typography.titleMedium
                         )
                         Text(
-                            text = "Konsultasi: ${doctorSchedule.dateTime}",
+                            text = "Konsultasi: $consultationDate",
                             color = Color.White.copy(alpha = 0.7f),
                             style = MaterialTheme.typography.bodySmall
                         )
@@ -109,6 +110,7 @@ fun ChatScreen(
             }
         )
 
+        // LazyColumn to display messages
         LazyColumn(
             modifier = Modifier
                 .weight(1f)
@@ -122,6 +124,7 @@ fun ChatScreen(
             }
         }
 
+        // TextField and Send Button
         Surface(
             modifier = Modifier.fillMaxWidth(),
             color = Color.White,
@@ -173,6 +176,8 @@ fun ChatScreen(
         }
     }
 }
+
+
 
 @Composable
 fun MessageItem(message: Message) {
@@ -244,10 +249,4 @@ fun ChatScreenPreview() {
 
     val doctorViewModel = DoctorViewModel()
 
-    MaterialTheme {
-        ChatScreen(
-            chatViewModel = chatViewModel,
-            doctorViewModel = doctorViewModel
-        )
-    }
 }

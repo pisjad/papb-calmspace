@@ -1,20 +1,26 @@
 package com.chrisp.calmspace.feature.konsultasi
 
+import android.util.Log
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-
-data class DoctorSchedule(
-    val name: String,
-    val dateTime: String, // Example: "23 Oktober 2024, 09:00 WIB"
-    val imageUrl: String // URL or resource for the profile image
-)
+import com.chrisp.calmspace.feature.data.Repository
+import com.chrisp.calmspace.model.DoctorModel
 
 class DoctorViewModel : ViewModel() {
-    val doctorSchedule = mutableStateOf(
-        DoctorSchedule(
-            name = "Dr. Ryan Ph.D",
-            dateTime = "23 Oktober 2024, 09:00 WIB",
-            imageUrl = "https://example.com/profile.jpg" // Simulated image URL
+    val repository = Repository()
+    val doctors = mutableStateListOf<DoctorModel>() // Initialize as empty list
+
+    init {
+        repository.getAllDoctor(
+            onSuccess = {
+                doctors.clear()
+                doctors.addAll(it)
+            },
+            onFailure = {
+                Log.e("Firebase", "Error getting documents", it)
+            }
         )
-    )
+    }
 }
+

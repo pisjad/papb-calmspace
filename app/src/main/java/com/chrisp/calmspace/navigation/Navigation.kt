@@ -16,7 +16,7 @@ import com.chrisp.calmspace.feature.forum.ForumAddScreen
 import com.chrisp.calmspace.feature.forum.ForumDetailScreen
 import com.chrisp.calmspace.feature.forum.ForumScreen
 import com.chrisp.calmspace.feature.home.DashboardScreen
-import com.chrisp.calmspace.feature.konsultasi.JadwalKonsultasi
+import com.chrisp.calmspace.feature.konsultasi.ChatScreen
 import com.chrisp.calmspace.feature.konsultasi.KonsultasiScreen
 import com.chrisp.calmspace.feature.onboarding.OnboardingScreen
 import com.chrisp.calmspace.feature.profile.ProfileScreen
@@ -52,9 +52,12 @@ fun Navigation() {
             KonsultasiScreen(navController = navController)
         }
 
-        composable(route = Screen.JadwalKonsultasi.route) {
-            JadwalKonsultasi(navController = navController)
+        composable(route = Screen.Chat.route) {
+            ChatScreen(navController = navController)
         }
+
+
+
 
         composable(route = Screen.Forum.route) {
             ForumScreen(navController = navController)
@@ -67,6 +70,8 @@ fun Navigation() {
         composable(route = Screen.Profile.route) {
             ProfileScreen(navController = navController)
         }
+
+
 
         composable(route = "${Screen.ArticleDetail.route}/{article_id}",
             arguments = listOf(
@@ -91,3 +96,4 @@ fun Navigation() {
         }
     }
 }
+

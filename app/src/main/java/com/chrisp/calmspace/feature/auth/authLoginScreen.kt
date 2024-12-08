@@ -1,6 +1,6 @@
 package com.chrisp.calmspace.feature.auth
 
-import android.R
+import com.chrisp.calmspace.R
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -118,7 +118,7 @@ fun LoginScreen(
             value = email,
             onValueChange = { email = it },
             label = { Text("Email") },
-            placeholder = { Text("Minimal 8 karakter") },
+            placeholder = { Text("Masukan Email anda") },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = 10.dp, end = 10.dp),
@@ -214,7 +214,7 @@ fun LoginScreen(
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Image(
-                    painter = painterResource(id = R.drawable.stat_sys_vp_phone_call_on_hold),
+                    painter = painterResource(id = R.drawable.google),
                     contentDescription = "Google Icon",
                     modifier = Modifier.size(24.dp)
                 )
