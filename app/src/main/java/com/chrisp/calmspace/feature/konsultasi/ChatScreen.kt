@@ -15,10 +15,15 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.AsyncImage
+import com.chrisp.calmspace.ui.theme.Purple100
+import com.chrisp.calmspace.ui.theme.Purple40
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -51,10 +56,12 @@ class ChatViewModel : ViewModel() {
 @Composable
 fun ChatScreen(
     modifier: Modifier = Modifier,
-    viewModel: ChatViewModel = viewModel()
+    chatViewModel: ChatViewModel = viewModel(),
+    doctorViewModel: DoctorViewModel = viewModel()
 ) {
     var messageText by remember { mutableStateOf("") }
     val messages = remember { mutableStateListOf<Message>() }
+    val doctorSchedule by doctorViewModel.doctorSchedule
 
     Column(
         modifier = modifier
@@ -73,26 +80,27 @@ fun ChatScreen(
                         modifier = Modifier.size(40.dp),
                         shape = CircleShape
                     ) {
-                        Icon(
-                            imageVector = Icons.Outlined.Person,
-                            contentDescription = "Profile picture",
-                            modifier = Modifier
-                                .size(40.dp)
-                                .background(Color.Gray.copy(alpha = 0.2f), CircleShape),
-                            tint = Color.Gray
-                        )
+//                        AsyncImage(
+//                            model = doctorSchedule.imageUrl,
+//                            contentDescription = "Profile picture",
+//                            modifier = Modifier
+//                                .size(40.dp)
+//                                .background(Color.Gray.copy(alpha = 0.2f), CircleShape),
+//                            placeholder = painterResource(id = R.drawable.default_profile),
+//                            error = painterResource(id = R.drawable.default_profile)
+//                        )
                     }
 
                     Spacer(modifier = Modifier.width(12.dp))
 
                     Column {
                         Text(
-                            text = "Konselor Name",
+                            text = doctorSchedule.name,
                             color = Color.White,
                             style = MaterialTheme.typography.titleMedium
                         )
                         Text(
-                            text = "Online",
+                            text = "Konsultasi: ${doctorSchedule.dateTime}",
                             color = Color.White.copy(alpha = 0.7f),
                             style = MaterialTheme.typography.bodySmall
                         )
@@ -152,7 +160,7 @@ fun ChatScreen(
                             messageText = ""
                         }
                     },
-                    containerColor = Color(0xFF075E54),
+                    containerColor = Purple100,
                     modifier = Modifier.size(48.dp)
                 ) {
                     Icon(
@@ -223,5 +231,23 @@ fun MessageItem(message: Message) {
                 }
             }
         }
+    }
+}
+
+@Preview(showBackground = true, device = "spec:width=360dp,height=640dp")
+@Composable
+fun ChatScreenPreview() {
+    val chatViewModel = ChatViewModel().apply {
+        sendMessage("Halo, saya ingin berkonsultasi", "currentUser")
+        sendMessage("Selamat datang. Ada yang bisa saya bantu?", "konselor")
+    }
+
+    val doctorViewModel = DoctorViewModel()
+
+    MaterialTheme {
+        ChatScreen(
+            chatViewModel = chatViewModel,
+            doctorViewModel = doctorViewModel
+        )
     }
 }

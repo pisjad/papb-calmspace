@@ -122,8 +122,4 @@ fun SearchBar(query: String, onSearch: (String) -> Unit) {
     )
 }
 
-/*@Composable
-@Preview(showBackground = true)
-fun prev() {
-    KonsultasiScreen()
-}*/
+
