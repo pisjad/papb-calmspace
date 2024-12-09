@@ -6,6 +6,7 @@ import androidx.compose.material.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
@@ -28,6 +29,7 @@ import androidx.navigation.compose.*
 import com.chrisp.calmspace.feature.artikel.ArticleViewModel
 import com.chrisp.calmspace.feature.auth.HomeViewModel
 import com.chrisp.calmspace.feature.auth.LoginScreen
+import com.chrisp.calmspace.feature.konsultasi.DoctorViewModel
 import com.chrisp.calmspace.navigation.BottomNavigationBar
 import com.chrisp.calmspace.navigation.Screen
 import com.chrisp.calmspace.ui.theme.Purple80
@@ -37,6 +39,9 @@ fun DashboardScreen(
     navController: NavController,
 ) {
     val viewModel: HomeViewModel = viewModel()
+    val doctorViewModel: DoctorViewModel = viewModel()  // Get ViewModel instance
+
+    val doctors = doctorViewModel.doctors
 
 
     Scaffold(
@@ -105,7 +110,16 @@ fun DashboardScreen(
                 Text("Rekomendasi Jadwal Konsultasi", style = MaterialTheme.typography.h6)
 
                 Spacer(modifier = Modifier.height(6.dp))
-                ConsultationCard()
+                if (doctors.isNotEmpty()) {
+                    // Ambil dokter pertama dari daftar
+                    val topDoctor = doctors.first()
+
+                    // Tampilkan hanya satu dokter teratas
+                    ConsultationCard(doctor = topDoctor, navController)
+                } else {
+                    // Show loading state if no doctors are loaded
+                    CircularProgressIndicator(modifier = Modifier.padding(16.dp))
+                }
 
                 Spacer(modifier = Modifier.height(16.dp))
                 Text("Konsultasi Darurat", style = MaterialTheme.typography.h6)

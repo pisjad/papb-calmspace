@@ -22,13 +22,13 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.*
 import com.chrisp.calmspace.feature.auth.LoginScreen
+import com.chrisp.calmspace.model.DoctorModel
 import com.chrisp.calmspace.ui.theme.Purple40
 import com.chrisp.calmspace.ui.theme.Purple80
 @Composable
-fun ConsultationCard() {
+fun ConsultationCard(doctor: DoctorModel, navController: NavController) {
     // Simulated dynamic data for doctor's consultation
-    val doctorName = "Dr. Ryan Ph.D"
-    val consultationDate = "23 Oktober 2024, 09:00 WIB"
+
 
     // Card to display doctor's schedule
     Card(
@@ -53,13 +53,14 @@ fun ConsultationCard() {
 
             // Doctor's Name and Consultation Time
             Column(modifier = Modifier.weight(1f)) {
-                Text(doctorName, style = MaterialTheme.typography.body1)
-                Text(consultationDate, style = MaterialTheme.typography.body2)
+                Text(doctor.name, style = MaterialTheme.typography.body1)
+                Text(doctor.date, style = MaterialTheme.typography.body2)
             }
 
             // Buka Button (aligned to the right)
             Button(
-                onClick = { /* Handle Buka action */ },
+                onClick = { navController.navigate("chatScreen/${doctor.name}/${doctor.date}")
+                },
                 modifier = Modifier.align(Alignment.CenterVertically),
                 colors = ButtonDefaults.buttonColors(backgroundColor = Purple40)
             ) {
