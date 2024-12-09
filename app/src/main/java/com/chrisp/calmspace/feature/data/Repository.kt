@@ -3,6 +3,7 @@ package com.chrisp.calmspace.feature.data
 import com.chrisp.calmspace.model.ArticleModel
 import com.chrisp.calmspace.model.DoctorModel
 import com.chrisp.calmspace.model.ForumModel
+import com.chrisp.calmspace.model.MessageModel
 import com.chrisp.calmspace.model.ScheduledConsultation
 import com.chrisp.calmspace.model.UserModel
 import com.google.firebase.auth.FirebaseAuth
@@ -157,12 +158,7 @@ class Repository{
             }
     }
 
-    fun addConsultation(consultation: ScheduledConsultation, onSuccess: () -> Unit, onFailure: (Exception) -> Unit) {
-        firestore.collection("consultations")
-            .add(consultation)
-            .addOnSuccessListener { onSuccess() }
-            .addOnFailureListener { onFailure(it) }
-    }
+
 
     fun getArticleById(
         id: String,
@@ -185,6 +181,78 @@ class Repository{
                             category = document.getString("category") ?: "",
                             date = document.getString("date") ?: "",
                             author = document.getString("author") ?: "",
+                        )
+                    )
+                    return@addSnapshotListener
+                }
+            }
+    }
+
+    fun getMesbyId(
+        id: String,
+        onSuccess: (MessageModel) -> Unit,
+        onFailed: (Exception) -> Unit
+    ) {
+        firestore
+            .collection("message")
+            .document(id)
+            .addSnapshotListener { value, error ->
+                if (error != null) {
+                    onFailed(error)
+                }
+                value?.let { document ->
+                    onSuccess(
+                        MessageModel(
+                            id = document.getString("id") ?: "",
+                            content = document.getString("content") ?: "",
+                        )
+                    )
+                    return@addSnapshotListener
+                }
+            }
+    }
+
+    fun addMes(
+        content: String,
+        onSuccess: () -> Unit,
+        onFailure: (Exception) -> Unit
+    ) {
+        val chatId = firestore.collection("message").document().id
+        val forumData = mapOf(
+            "id" to chatId,
+            "content" to content
+        )
+
+        firestore.collection("message")
+            .document(chatId)
+            .set(forumData)
+            .addOnSuccessListener {
+                onSuccess()
+            }
+            .addOnFailureListener { exception ->
+                onFailure(exception)
+            }
+    }
+
+
+    fun getDoctorById(
+        id: String,
+        onSuccess: (DoctorModel) -> Unit,
+        onFailed: (Exception) -> Unit
+    ) {
+        firestore
+            .collection("doctor")
+            .document(id)
+            .addSnapshotListener { value, error ->
+                if (error != null) {
+                    onFailed(error)
+                }
+                value?.let { document ->
+                    onSuccess(
+                        DoctorModel(
+                            id = document.getString("id") ?: "",
+                            name = document.getString("name") ?: "",
+                            date = document.getString("date") ?: "",
                         )
                     )
                     return@addSnapshotListener

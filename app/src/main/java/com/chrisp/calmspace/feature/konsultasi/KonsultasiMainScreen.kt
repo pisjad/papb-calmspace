@@ -79,7 +79,7 @@ fun KonsultasiScreen(navController: NavController) {
                     modifier = Modifier.fillMaxSize()
                 ) {
                     itemsIndexed(doctors) { index, doctor ->
-                        DoctorCard(doctor = doctor)
+                        DoctorCard(doctor = doctor, navController)
                     }
                 }
             } else {
@@ -94,9 +94,8 @@ fun KonsultasiScreen(navController: NavController) {
 
 
 
-// Composable to display Doctor information
 @Composable
-fun DoctorCard(doctor: DoctorModel) {
+fun DoctorCard(doctor: DoctorModel, navController: NavController) {
     Card(
         shape = RoundedCornerShape(12.dp),
         elevation = 4.dp,
@@ -128,19 +127,22 @@ fun DoctorCard(doctor: DoctorModel) {
             Spacer(modifier = Modifier.height(16.dp))
 
             Button(
-                onClick = { /* Aksi untuk mulai konsultasi */ },
+                onClick = {
+                    navController.navigate("chatScreen/${doctor.name}/${doctor.date}")
+                },
                 modifier = Modifier.fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors(backgroundColor = Purple80)
             ) {
-                Text(text = "Mulai Konsultasi",
+                Text(
+                    text = "Mulai Konsultasi",
                     fontSize = 14.sp,
                     color = Color.White
                 )
             }
-
         }
     }
 }
+
 
 @Composable
 fun SearchBar(query: String, onSearch: (String) -> Unit) {

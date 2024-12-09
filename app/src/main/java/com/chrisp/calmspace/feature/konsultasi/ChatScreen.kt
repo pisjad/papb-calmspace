@@ -23,6 +23,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import com.chrisp.calmspace.navigation.Screen
+import com.chrisp.calmspace.ui.theme.ChevronLeft
 import com.chrisp.calmspace.ui.theme.Purple100
 import com.chrisp.calmspace.ui.theme.Purple40
 import java.text.SimpleDateFormat
@@ -42,32 +44,13 @@ enum class MessageStatus {
 
 
 
-class ChatViewModel : ViewModel() {
-    private val _messages = mutableStateListOf<Message>()
-    val messages: List<Message> = _messages
-
-
-    fun sendMessage(content: String, senderId: String) {
-        val message = Message(
-            content = content,
-            senderId = senderId
-        )
-        _messages.add(message)
-    }
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ChatScreen(navController: NavController) {
-    // Retrieve the arguments passed to the screen
-    val doctorName = navController.currentBackStackEntry
-        ?.arguments?.getString("doctorName") ?: "Doctor"
-    val consultationDate = navController.currentBackStackEntry
-        ?.arguments?.getString("consultationDate") ?: "Date"
-
+fun ChatScreen(navController: NavController, doctorName: String, consultationDate: String) {
     val chatViewModel: ChatViewModel = viewModel()
     var messageText by remember { mutableStateOf("") }
-    val messages = remember { mutableStateListOf<Message>() }
+    val messages = chatViewModel.messages
 
     Column(
         modifier = Modifier
@@ -77,24 +60,32 @@ fun ChatScreen(navController: NavController) {
         // Top App Bar with Doctor's Name and Consultation Date
         TopAppBar(
             colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = Color(0xFF075E54)
+                containerColor = Purple100
             ),
             title = {
                 Row(
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth() // Membuat Row mengambil lebar penuh
                 ) {
-                    // Doctor's avatar or icon (if needed)
-                    Surface(
-                        modifier = Modifier.size(40.dp),
-                        shape = CircleShape
+                    IconButton(
+                        onClick = {
+                            navController.navigate(Screen.Konsultasi.route) {
+                                popUpTo(Screen.Chat.route) { inclusive = true }
+                            }
+                        },
+                        modifier = Modifier.size(40.dp)
                     ) {
-                        // Placeholder for doctor's avatar
+                        Icon(
+                            imageVector = ChevronLeft,
+                            contentDescription = "Chevron Left Button",
+                            tint = Color.White
+                        )
                     }
-
-                    Spacer(modifier = Modifier.width(12.dp))
-
-                    // Doctor's name and consultation date
-                    Column {
+                    // Memberikan Modifier.weight(1f) agar kolom di sebelah kanan (doctorName dan consultationDate) terdorong ke kiri
+                    Spacer(modifier = Modifier.width(8.dp)) // Optional: Menambah sedikit jarak antara ikon dan teks
+                    Column(
+                        modifier = Modifier.weight(1f) // Menyebabkan kolom ini mengambil ruang lebih besar dan mendorong ke kiri
+                    ) {
                         Text(
                             text = doctorName,
                             color = Color.White,
@@ -110,72 +101,57 @@ fun ChatScreen(navController: NavController) {
             }
         )
 
-        // LazyColumn to display messages
+
+
+        // Chat messages area
         LazyColumn(
             modifier = Modifier
                 .weight(1f)
-                .fillMaxWidth(),
-            reverseLayout = true,
-            contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp)
+                .padding(16.dp)
         ) {
-            items(messages.asReversed()) { message ->
+            items(messages) { message ->
                 MessageItem(message = message)
-                Spacer(modifier = Modifier.height(4.dp))
             }
         }
 
-        // TextField and Send Button
-        Surface(
-            modifier = Modifier.fillMaxWidth(),
-            color = Color.White,
-            tonalElevation = 2.dp
+        // Message input area
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
         ) {
-            Row(
+            TextField(
+                value = messageText,
+                onValueChange = { messageText = it },
+                placeholder = { Text("Tulis pesan...") },
                 modifier = Modifier
-                    .padding(horizontal = 8.dp, vertical = 4.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                TextField(
-                    value = messageText,
-                    onValueChange = { messageText = it },
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(end = 8.dp),
-                    colors = TextFieldDefaults.colors(
-                        unfocusedContainerColor = Color(0xFFEEEEEE),
-                        focusedContainerColor = Color(0xFFEEEEEE),
-                        unfocusedIndicatorColor = Color.Transparent,
-                        focusedIndicatorColor = Color.Transparent
-                    ),
-                    shape = RoundedCornerShape(24.dp),
-                    placeholder = { Text("Ketik pesan") }
+                    .weight(1f)
+                    .padding(end = 8.dp),
+                colors = TextFieldDefaults.textFieldColors(
+                    containerColor = Color.White,
+                    focusedIndicatorColor = Color(0xFF075E54)
                 )
-
-                FloatingActionButton(
-                    onClick = {
-                        if (messageText.isNotEmpty()) {
-                            messages.add(
-                                Message(
-                                    content = messageText,
-                                    senderId = "currentUser"
-                                )
-                            )
-                            messageText = ""
-                        }
-                    },
-                    containerColor = Purple100,
-                    modifier = Modifier.size(48.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.Send,
-                        contentDescription = "Send message",
-                        tint = Color.White
-                    )
+            )
+            IconButton(
+                onClick = {
+                    if (messageText.isNotBlank()) {
+                        // Send message
+                        chatViewModel.sendMessage(content = messageText, senderId = "currentUser")
+                        messageText = ""  // Reset message input field
+                    }
                 }
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Send,
+                    contentDescription = "Send Message",
+                    tint = Purple100
+                )
             }
         }
     }
 }
+
+
 
 
 
@@ -239,14 +215,3 @@ fun MessageItem(message: Message) {
     }
 }
 
-@Preview(showBackground = true, device = "spec:width=360dp,height=640dp")
-@Composable
-fun ChatScreenPreview() {
-    val chatViewModel = ChatViewModel().apply {
-        sendMessage("Halo, saya ingin berkonsultasi", "currentUser")
-        sendMessage("Selamat datang. Ada yang bisa saya bantu?", "konselor")
-    }
-
-    val doctorViewModel = DoctorViewModel()
-
-}

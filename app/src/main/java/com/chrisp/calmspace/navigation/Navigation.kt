@@ -2,11 +2,13 @@ package com.chrisp.calmspace.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import androidx.navigation.navDeepLink
 import com.chrisp.calmspace.feature.artikel.ArticleDetailScreen
 import com.chrisp.calmspace.feature.artikel.ArticleScreen
 import com.chrisp.calmspace.feature.auth.HomeViewModel
@@ -52,9 +54,7 @@ fun Navigation() {
             KonsultasiScreen(navController = navController)
         }
 
-        composable(route = Screen.Chat.route) {
-            ChatScreen(navController = navController)
-        }
+
 
 
 
@@ -94,6 +94,24 @@ fun Navigation() {
             val forum_id = it.arguments?.getString("forum_id") ?: ""
             ForumDetailScreen(navController = navController, forum_id = forum_id)
         }
+        composable(
+            route = "${Screen.Chat.route}/{doctorName}/{consultationDate}",
+            arguments = listOf(
+                navArgument("doctorName") { type = NavType.StringType },
+                navArgument("consultationDate") { type = NavType.StringType }
+            ),
+            deepLinks = listOf(navDeepLink { uriPattern = "android-app://androidx.navigation/chatScreen/{doctorName}/{consultationDate}" })
+        ) {
+            val doctorName = it.arguments?.getString("doctorName") ?: ""
+            val consultationDate = it.arguments?.getString("consultationDate") ?: ""
+
+            ChatScreen(navController = navController, doctorName = doctorName, consultationDate = consultationDate)
+        }
+
+
+
     }
 }
+
+
 
