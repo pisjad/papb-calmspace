@@ -13,11 +13,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import com.chrisp.calmspace.navigation.Screen
 import com.chrisp.calmspace.ui.theme.Purple40
 import com.chrisp.calmspace.ui.theme.Purple60
 
 @Composable
-fun ConsultationNowCard() {
+fun ConsultationNowCard(navController: NavController) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -33,7 +35,11 @@ fun ConsultationNowCard() {
             verticalArrangement = Arrangement.Center // Center content vertically
         ) {
             Button(
-                onClick = { /* Handle button click */ },
+                onClick = { navController.navigate(Screen.Konsultasi.route) {
+                    popUpTo(Screen.Home.route) {
+                        inclusive = true
+                    }
+                } },
                 modifier = Modifier
                     .fillMaxWidth() // You can change this to a specific width if needed
                     .padding(16.dp), // Add padding if needed
@@ -63,8 +69,3 @@ fun ConsultationNowCard() {
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun PreviewConsultationCard() {
-    ConsultationNowCard()
-}

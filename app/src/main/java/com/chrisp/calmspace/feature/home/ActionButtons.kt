@@ -1,6 +1,7 @@
 package com.chrisp.calmspace.feature.home
 
 import androidx.compose.foundation.background
+import com.chrisp.calmspace.R
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -12,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -23,43 +25,42 @@ import com.chrisp.calmspace.ui.theme.White100
 
 @Composable
 fun CustomButtons(navController: NavController) {
-    // Row to place the buttons side by side
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(0.dp)
-        ,
+            .padding(0.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
         // Konsultasi Button
         ButtonWithIcon(
-            icon = Icons.Filled.Info,
+            iconRes = R.drawable.ic_konsultasi, // Ganti dengan icon yang sesuai
             text = "Konsultasi",
             route = Screen.Konsultasi.route,
-            navController
+            navController = navController
         )
 
         // Forum Button
         ButtonWithIcon(
-            icon = Icons.Filled.Info,
+            iconRes = R.drawable.ic_forum, // Ganti dengan icon yang sesuai
             text = "Forum",
             route = Screen.Forum.route,
-            navController
+            navController = navController
         )
 
         // Artikel Button
         ButtonWithIcon(
-            icon = Icons.Filled.ThumbUp,
+            iconRes = R.drawable.ic_article, // Ganti dengan icon yang sesuai
             text = "Artikel",
             route = Screen.Article.route,
-            navController
+            navController = navController
         )
     }
 }
 
+
 @Composable
-fun ButtonWithIcon(icon: ImageVector, text: String, route: String, navController: NavController) {
+fun ButtonWithIcon(iconRes: Int, text: String, route: String, navController: NavController) {
     Button(
         onClick = {
             navController.navigate(route) {
@@ -79,9 +80,9 @@ fun ButtonWithIcon(icon: ImageVector, text: String, route: String, navController
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            // Icon on top
+            // Icon from resource
             Icon(
-                imageVector = icon,
+                painter = painterResource(id = iconRes),
                 contentDescription = text,
                 modifier = Modifier.size(32.dp),
                 tint = Color.White // Icon color

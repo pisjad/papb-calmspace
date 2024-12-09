@@ -101,8 +101,8 @@ fun DashboardScreen(
         ) {
             item {
                 CustomButtons(navController)
-                Spacer(modifier = Modifier.height(6.dp))
-                Text("Jadwal Konsultasimu", style = MaterialTheme.typography.h6)
+                Spacer(modifier = Modifier.height(10.dp))
+                Text("Rekomendasi Jadwal Konsultasi", style = MaterialTheme.typography.h6)
 
                 Spacer(modifier = Modifier.height(6.dp))
                 ConsultationCard()
@@ -110,7 +110,7 @@ fun DashboardScreen(
                 Spacer(modifier = Modifier.height(16.dp))
                 Text("Konsultasi Darurat", style = MaterialTheme.typography.h6)
                 Spacer(modifier = Modifier.height(6.dp))
-                ConsultationNowCard()
+                ConsultationNowCard(navController)
 
                 // Artikel section with clickable modifier
                 Spacer(modifier = Modifier.height(16.dp))
