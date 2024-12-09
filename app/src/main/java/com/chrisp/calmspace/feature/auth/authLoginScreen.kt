@@ -6,19 +6,14 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -187,8 +182,8 @@ fun LoginScreen(
                     .height(48.dp)
                     .padding(start = 10.dp, end = 10.dp),
                 shape = MaterialTheme.shapes.medium, // Rounded corners
-                elevation = ButtonDefaults.elevation(defaultElevation = 4.dp),
-                colors = ButtonDefaults.buttonColors(backgroundColor = Purple100)
+                elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = Purple100)
             ) {
                 Text(text = "Login", color = Color.White) // Set text color to white for contrast
             }
@@ -209,8 +204,8 @@ fun LoginScreen(
                 .height(48.dp)
                 .padding(start = 10.dp, end = 10.dp),
             shape = MaterialTheme.shapes.medium,
-            elevation = ButtonDefaults.elevation(defaultElevation = 4.dp),
-            colors = ButtonDefaults.buttonColors(backgroundColor = White40)
+            elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = White40)
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Image(
@@ -241,4 +236,3 @@ fun LoginScreen(
         }
     }
 }
-
