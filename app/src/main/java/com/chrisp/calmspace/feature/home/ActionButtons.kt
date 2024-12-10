@@ -5,23 +5,17 @@ import com.chrisp.calmspace.R
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.ThumbUp
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.chrisp.calmspace.navigation.Screen
-import com.chrisp.calmspace.ui.theme.Purple80
-import com.chrisp.calmspace.ui.theme.White100
+import com.chrisp.calmspace.ui.theme.Purple60
 
 @Composable
 fun CustomButtons(navController: NavController) {
@@ -72,8 +66,8 @@ fun ButtonWithIcon(iconRes: Int, text: String, route: String, navController: Nav
         modifier = Modifier
             .size(110.dp) // Size of the button
             .padding(1.dp), // Padding around the button
-        shape = RoundedCornerShape(12.dp), // Rounded corners
-        colors = ButtonDefaults.buttonColors(backgroundColor = Purple80), // Button color
+        shape = RoundedCornerShape(8.dp), // Rounded corners
+        colors = ButtonDefaults.buttonColors(backgroundColor = Purple60), // Button color
         elevation = ButtonDefaults.elevation(defaultElevation = 4.dp) // Optional shadow for the button
     ) {
         Column(
@@ -84,14 +78,14 @@ fun ButtonWithIcon(iconRes: Int, text: String, route: String, navController: Nav
             Icon(
                 painter = painterResource(id = iconRes),
                 contentDescription = text,
-                modifier = Modifier.size(32.dp),
+                modifier = Modifier.size(36.dp),
                 tint = Color.White // Icon color
             )
             Spacer(modifier = Modifier.height(8.dp)) // Space between icon and text
             // Text label below the icon
             Text(
                 text = text,
-                fontSize = 12.sp,
+                fontSize = 13.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.White // Text color
             )

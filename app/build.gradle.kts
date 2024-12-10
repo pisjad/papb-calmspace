@@ -87,5 +87,6 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics")
     implementation("io.coil-kt:coil-compose:2.1.0")
 
+    implementation("com.google.accompanist:accompanist-systemuicontroller:0.30.0")
 
 }

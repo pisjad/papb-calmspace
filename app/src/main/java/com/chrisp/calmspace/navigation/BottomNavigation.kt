@@ -12,6 +12,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.chrisp.calmspace.ui.theme.Purple60
+import com.chrisp.calmspace.ui.theme.White60
 
 @Composable
 fun BottomNavigationBar(navController: NavController) {
@@ -36,8 +37,8 @@ fun BottomNavigationBar(navController: NavController) {
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = Purple60,
                     selectedTextColor = Purple60,
-                    unselectedTextColor = Color.Gray,
-                    unselectedIconColor = Color.Gray,
+                    unselectedTextColor = White60,
+                    unselectedIconColor = White60,
                     indicatorColor = Color.White
                 ),
                 icon = {

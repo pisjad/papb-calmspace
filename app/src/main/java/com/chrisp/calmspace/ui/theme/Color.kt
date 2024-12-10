@@ -2,6 +2,8 @@ package com.chrisp.calmspace.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
+val Danger = Color(0xFFD40000)
+
 val Purple100 = Color(0xFF392B56)
 val Purple80 = Color(0xFF594488)
 val Purple60 = Color(0xFF7E60BF)
