@@ -6,3 +6,11 @@ data class UserModel(
     val name: String,
     val no_telp: String,
 )
+
+
+
+
+
+
+
+

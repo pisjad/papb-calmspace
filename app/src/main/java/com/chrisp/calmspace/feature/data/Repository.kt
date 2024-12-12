@@ -4,14 +4,63 @@ import com.chrisp.calmspace.model.ArticleModel
 import com.chrisp.calmspace.model.DoctorModel
 import com.chrisp.calmspace.model.ForumModel
 import com.chrisp.calmspace.model.MessageModel
-import com.chrisp.calmspace.model.ScheduledConsultation
 import com.chrisp.calmspace.model.UserModel
+import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.tasks.await
 
 class Repository{
     private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
+
+    fun getCurrentUser(): FirebaseUser? {
+        return auth.currentUser
+    }
+
+    suspend fun signInWithGoogle(idToken: String): AuthResult {
+        val credential = GoogleAuthProvider.getCredential(idToken, null)
+        return auth.signInWithCredential(credential).await()
+    }
+
+    fun signUpWithGoogle(
+        idToken: String,
+        name: String,
+        no_telp: String,
+        onSuccess: () -> Unit,
+        onFailed: (Exception) -> Unit
+    ) {
+        val credential = GoogleAuthProvider.getCredential(idToken, null)
+        auth.signInWithCredential(credential)
+            .addOnSuccessListener {
+                firestore
+                    .collection("user")
+                    .document(it.user?.uid ?: "")
+                    .set(
+                        UserModel(
+                            uid = it.user?.uid ?: "",
+                            name = name,
+                            no_telp = no_telp,
+                            email = it.user?.email ?: "",
+                        )
+                    )
+                    .addOnSuccessListener {
+                        onSuccess()
+                    }
+                    .addOnFailureListener {
+                        onFailed(it)
+                    }
+            }
+            .addOnFailureListener {
+                onFailed(it)
+            }
+    }
+
+    fun signOut() {
+        auth.signOut()
+    }
 
     fun signUp(
         email : String,

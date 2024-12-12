@@ -1,5 +1,7 @@
 package com.chrisp.calmspace.feature.auth
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import com.chrisp.calmspace.R
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -23,19 +25,37 @@ import com.chrisp.calmspace.ui.theme.White100
 import com.chrisp.calmspace.ui.theme.ChevronLeft
 import com.chrisp.calmspace.ui.theme.White40
 import androidx.compose.runtime.*
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.chrisp.calmspace.navigation.Screen
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
 import kotlinx.coroutines.delay
 
 @Composable
 fun LoginScreen(
-    navController: NavController
+    navController: NavController,
 ) {
     val viewModel: AuthViewModel = viewModel()
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var isLoading by remember { mutableStateOf(false) }
+
+    val user by viewModel.user.collectAsState()
+    val context = LocalContext.current
+    val token = stringResource(R.string.web_client_id)
+    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+        try {
+            val account = task.getResult(ApiException::class.java)!!
+            viewModel.signInWithGoogle(account.idToken!!, {}, { e -> e.printStackTrace() })
+        } catch (e: ApiException) {
+            e.printStackTrace()
+        }
+    }
 
     LaunchedEffect(viewModel.errMsg.value) {
         if (viewModel.errMsg.value.isNotEmpty()) {
@@ -198,7 +218,14 @@ fun LoginScreen(
 
         // Google Login Button (Handle Google Login)
         Button(
-            onClick = { /* Handle Google Login */ },
+            onClick = {
+                val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                    .requestIdToken(token)
+                    .requestEmail()
+                    .build()
+                val gsc = GoogleSignIn.getClient(context, gso)
+                launcher.launch(gsc.signInIntent)
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(48.dp)
@@ -225,6 +252,7 @@ fun LoginScreen(
             Text(text = "Belum memiliki akun? ")
             Text(
                 text = "Register",
+                color = Color.Blue,
                 modifier = Modifier.clickable {
                     navController.navigate(Screen.Register.route) {
                         popUpTo(Screen.Login.route) {
