@@ -71,6 +71,30 @@ fun ForumDetailScreen(
                         )
                     }
                 },
+                actions = {
+                    IconButton(onClick = {
+                        // Panggil fungsi untuk menghapus forum
+                        viewModel.deleteForum(
+                            forumId = forum_id,
+                            onSuccess = {
+                                navController.navigate(Screen.Forum.route) {
+                                    popUpTo(Screen.ForumDetail.route) {
+                                        inclusive = true
+                                    }
+                                }
+                            },
+                            onFailure = { message ->
+                                // Tampilkan pesan error (opsional)
+                            }
+                        )
+                    }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_delete),
+                            contentDescription = "Delete",
+                            tint = Color.White
+                        )
+                    }
+                },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = Purple80,
                 )
@@ -107,9 +131,9 @@ fun ForumDetailScreen(
                         fontSize = 14.sp,
                         color = Color.Gray
                     )
-
                 }
             }
         }
     }
 }
+

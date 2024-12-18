@@ -22,6 +22,7 @@ import com.chrisp.calmspace.feature.konsultasi.ChatScreen
 import com.chrisp.calmspace.feature.konsultasi.KonsultasiScreen
 import com.chrisp.calmspace.feature.onboarding.OnboardingScreen
 import com.chrisp.calmspace.feature.profile.ProfileScreen
+import com.chrisp.calmspace.feature.profile.ResetPasswordPage
 
 @Composable
 fun Navigation() {
@@ -54,8 +55,9 @@ fun Navigation() {
             KonsultasiScreen(navController = navController)
         }
 
-
-
+        composable(route = Screen.ResetPass.route) {
+            ResetPasswordPage(navController = navController)
+        }
 
 
 

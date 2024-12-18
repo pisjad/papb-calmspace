@@ -1,18 +1,19 @@
 package com.chrisp.calmspace.feature.profile
 
 import android.annotation.SuppressLint
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -32,6 +33,7 @@ import com.chrisp.calmspace.navigation.Screen
 @Composable
 fun ProfileScreen(navController: NavController) {
     val viewModel: ProfileViewModel = viewModel()
+    val context = LocalContext.current
 
     Scaffold(
         bottomBar = {
@@ -66,15 +68,8 @@ fun ProfileScreen(navController: NavController) {
 
             // Profile Picture
             Box(contentAlignment = Alignment.BottomEnd) {
-//            AsyncImage(
-//                model = profile.profilePictureUrl,
-//                contentDescription = "Profile Picture",
-//                modifier = Modifier
-//                    .size(100.dp)
-//                    .clip(CircleShape)
-//            )
                 Icon(
-                    painter = painterResource(id = R.drawable.ic_camera), // Replace with your icon resource
+                    painter = painterResource(id = R.drawable.ic_camera),
                     contentDescription = "Edit Profile Picture",
                     tint = Color.White,
                     modifier = Modifier
@@ -103,7 +98,22 @@ fun ProfileScreen(navController: NavController) {
                 /* Navigate to consultation history */
             }
             OptionItem(icon = R.drawable.ic_lock, text = "Reset Password") {
-                /* Navigate to reset password */
+                navController.navigate(Screen.ResetPass.route) {
+                    popUpTo(Screen.Profile.route) { inclusive = true }
+                }
+            }
+            OptionItem(icon = R.drawable.ic_delete, text = "Delete Account") {
+                viewModel.deleteAccount(
+                    onSuccess = {
+                        navController.navigate(Screen.Login.route) {
+                            popUpTo(Screen.Home.route) { inclusive = true }
+                        }
+                    },
+                    onFailure = { message ->
+                        // Tampilkan pesan error jika gagal
+                        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                    }
+                )
             }
 
             Spacer(modifier = Modifier.weight(1f))
@@ -129,7 +139,6 @@ fun ProfileScreen(navController: NavController) {
             }
         }
     }
-
 }
 
 @Composable

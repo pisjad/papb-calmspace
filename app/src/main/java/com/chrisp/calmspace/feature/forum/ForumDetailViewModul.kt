@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.chrisp.calmspace.feature.data.Repository
 import com.chrisp.calmspace.model.ForumModel
+import com.google.firebase.firestore.FirebaseFirestore
 
 class ForumDetailViewModel : ViewModel() {
     val repository = Repository()
@@ -21,4 +22,16 @@ class ForumDetailViewModel : ViewModel() {
             }
         )
     }
+    fun deleteForum(forumId: String, onSuccess: () -> Unit, onFailure: (String) -> Unit) {
+        val firestore = FirebaseFirestore.getInstance()
+        firestore.collection("forum").document(forumId)
+            .delete()
+            .addOnSuccessListener {
+                onSuccess()
+            }
+            .addOnFailureListener { exception ->
+                onFailure(exception.message ?: "Failed to delete forum")
+            }
+    }
+
 }
