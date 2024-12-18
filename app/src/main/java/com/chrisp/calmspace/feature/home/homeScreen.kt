@@ -29,6 +29,7 @@ import androidx.navigation.compose.*
 import com.chrisp.calmspace.feature.artikel.ArticleViewModel
 import com.chrisp.calmspace.feature.auth.HomeViewModel
 import com.chrisp.calmspace.feature.auth.LoginScreen
+import com.chrisp.calmspace.feature.konsultasi.DoctorCard
 import com.chrisp.calmspace.feature.konsultasi.DoctorViewModel
 import com.chrisp.calmspace.navigation.BottomNavigationBar
 import com.chrisp.calmspace.navigation.Screen
@@ -115,7 +116,7 @@ fun DashboardScreen(
                     val topDoctor = doctors.first()
 
                     // Tampilkan hanya satu dokter teratas
-                    ConsultationCard(doctor = topDoctor, navController)
+                    DoctorCard(doctor = topDoctor, navController)
                 } else {
                     // Show loading state if no doctors are loaded
                     CircularProgressIndicator(modifier = Modifier.padding(16.dp))
