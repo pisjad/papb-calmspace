@@ -103,17 +103,18 @@ fun ProfileScreen(navController: NavController) {
                 }
             }
             OptionItem(icon = R.drawable.ic_delete, text = "Delete Account") {
-                viewModel.deleteAccount(
-                    onSuccess = {
-                        navController.navigate(Screen.Login.route) {
-                            popUpTo(Screen.Home.route) { inclusive = true }
-                        }
-                    },
-                    onFailure = { message ->
-                        // Tampilkan pesan error jika gagal
-                        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-                    }
-                )
+            //danger bahaya ini
+            //                viewModel.deleteAccount(
+//                    onSuccess = {
+//                        navController.navigate(Screen.Login.route) {
+//                            popUpTo(Screen.Home.route) { inclusive = true }
+//                        }
+//                    },
+//                    onFailure = { message ->
+//                        // Tampilkan pesan error jika gagal
+//                        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+//                    }
+//                )
             }
 
             Spacer(modifier = Modifier.weight(1f))
